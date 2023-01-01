@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Portfolio Website</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/5bb9094fb4.js" crossorigin="anonymous"></script>
+</head>
+<header>
+    <div class="container">
+        <nav>
+            <img src="Assets/Logo.jpg" class="logo" alt="DB Logo">
+            <ul id="side-menu">
+                <li><a href="#header">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <i class="fas fa-times" onclick="closeMenu()"></i>
+            </ul>
+            <i class="fas fa-bars" onclick="openMenu()"></i>
+        </nav>
+        <div class="header-text">
+            <p>FullStack Developer</p>
+            <h1>Hey , I'm <span>Daniel</span></h1>
+        </div>           
+</header>
+</div>
+<body>
+    <div id="about">
+        <div class="container">
+            <div class="row">
+                <div class="about-col-1">
+                    <img src="Assets/Logo.jpg">
+                </div>
+                <div class="about-col-2">
+                    <h1 class="sub-title">About Me</h1>
+                    <br>
+                    <p>I'm currently a student at #Sela collage of software development, part of an IDF special program.
+                        After my studies I'm planing to continue enriching myself with other programming languages as well as other related studies.
+                        Always open minded and highly motivated to keep learning.
+                        Interested in technological progress, agriculture, agrotech & sport statistics/ data.</p>                
+                    <div class="tab-titles">
+                        <p class="tab-links active-link" onclick="opentab('skills')">Skills</p>
+                        <p class="tab-links" onclick="opentab('experience')">Experience</p>
+                        <p class="tab-links" onclick="opentab('education')">Education</p>
+                    </div>
+                    <div class="tab-contents active-tab" id="skills">
+                        <ul>
+                            <li><span>Front-end Development</span><br>Web App Development</li>
+                            <li><span>Back-end Development</span><br>Logics</li>
+                            <li><span>App Development</span><br>Building WPF Apps</li>
+                        </ul>
+                    </div>
+                    <div class="tab-contents" id="experience">
+                        <ul>
+                            <li><span>2021 - Current</span><br>FullStack Bootcamp For Realesed Soliders</li>
+                            <li><span>2020 - 2021</span><br>Shift Manager At Shanski Bar</li>
+                            <li><span>2019 - 2020</span><br>Customer Success / External Technical Team Leader at Snapirim Farm</li>
+                        </ul>
+                    </div>
+                    <div class="tab-contents" id="education">
+                        <ul>
+                            <li><span>2021</span><br>FullStack Bootcamp At Sela Collage</li>
+                            <li><span>2020</span><br>Swing Trading At Psagot Collage</li>
+                            <li><span>2012 - 2015</span><br>Full Diploma - Extended Biology and Geography At Tzafit High - School</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!------------services-------------->
+<div id="services">
+    <div class="container">
+        <h1 class="sub-title">My Services</h1>
+        <div class="services-list">
+            <div>
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <h2>Backend Developer</h2>
+                <p>.Net Framework / .Net Core (C#), JavaScript, ASP.Net MVC, Python.</p>
+            </div>
+            <div>
+                <i class="fa-brands fa-app-store"></i>
+                <h2>Front-end Development</h2>
+                <p>Angular, CSS, HTML, JavaScript, Jquery, TypeScript WPF, UWP.</p>
+            </div>
+            <div>
+                <i class="fa-solid fa-database"></i>
+                <h2>Server Side</h2>
+                <p>SQL, MSSQL, NoSQL.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ------------portfolio-------------- -->
+<div id="portfolio">
+    <div class="container">
+        <h1 class="sub-title">My Work</h1>
+        <div class="work-list">
+            <div class="work">
+                <img src="Assets/PetShop.jpg">
+                <div class="layer">
+                    <h3>ASP .Net WebApp</h3>
+                    <p>Asp Net.Core MVC web app using MSSQL EF6 Identity and Boostrap</p>
+                    <a href="https://github.com/DanielBedrack/AdoptMe.git"><i class="fas fa-external-link-alt"></i></a>
+                </div>               
+            </div>       
+            <div class="work">
+                <img src="Assets/Weather.jpg">
+                <div class="layer">
+                    <h3>WPF Api WeatherApp</h3>
+                    <p>C# WPF project which use API in order to get current weather in every city you wish for.</p>
+                    <a href="https://github.com/DanielBedrack/WeatherApp.git"><i class="fas fa-external-link-alt"></i></a>
+                </div>               
+            </div>  
+            <div class="work">
+                <img src="Assets/DodgeGame.jpg">
+                <div class="layer">
+                    <h3>Dodge Game</h3>
+                    <p>A C# WPF App game project which you need to collect as many Humburgers and escape Salat Bowl's.</p>
+                    <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                </div>               
+            </div>  
+        </div>
+        <a href="https://github.com/" class="btn">See More</a> 
+    </div>
+</div>
+<!-- -----------Contact------------- -->
+<div id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="contact">
+                <h1 class="sub-title">Contact Me</h1>  
+                <h3 class="social-icons"><a href="https://mail.google.com/mail/u/0/?tab=mm#inbox"><i class="fas fa-paper-plane"></i></a>danielbedrack@gmail.com</h3>
+                <br>
+                <h3><i class="fas fa-phone-square-alt"></i><span>053 - 5215787</span></h3>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/danielbedrack/"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://www.facebook.com/daniel.bedrack/"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://github.com/DanielBedrack"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.instagram.com/daniel_bedrack/"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+                <a href="Assets/my-cv.pdf" download class="btn cv">Download CV</a>
+            </div>            
+        </div>
+    </div>
+    
+</div>
+<footer>
+    <nav>
+       <div class="nav2">
+        <ul id="bottom-menu">
+            <li><a href="#header">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li>Copyright <span><i class="fa-regular fa-copyright"></i></i> Daniel.</span> </li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <i class="fas fa-times" onclick="closeMenu()"></i>
+        </ul>
+        <i class="fas fa-bars" onclick="openMenu()"></i>
+       </div>            
+    </nav>         
+</footer>
+</body>
+</html>
+
+<script>
+    var tabLinks = document.getElementsByClassName("tab-links");
+    var tabContents = document.getElementsByClassName("tab-contents");
+    function opentab(tabName){
+        for(tablink of tabLinks){
+            tablink.classList.remove("active-link");
+        }
+        for(tabContent of tabContents){
+            tabContent.classList.remove("active-tab");
+        }
+        event.currentTarget.classList.add("active-link")
+        document.getElementById(tabName).classList.add("active-tab")
+    }
+</script>
+<script>
+    var sideMenu = document.getElementById("side-menu");
+
+    function openMenu(){
+        sideMenu.style.right = "0"
+    }
+    function closeMenu(){
+        sideMenu.style.right = "-130px"
+    }
+</script>
