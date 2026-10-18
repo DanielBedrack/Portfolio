@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "typecheck": "tsc -b --pretty false",
     "verify:content": "tsx scripts/verify-content.ts",
-    "check": "npm run typecheck && npm run lint && npm run test:run && npm run verify:content && npm run build"
+    "verify:resume": "node scripts/verify-resume.mjs",
+    "check": "npm run typecheck && npm run lint && npm run test:run && npm run verify:content && npm run verify:resume && npm run build"
   },
   "dependencies": {
     "react": "^19.3.1",
@@ -34,6 +35,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",
     "jsdom": "^26.1.0",
+    "pdfjs-dist": "^6.4.299",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.2",

@@ -17,8 +17,6 @@ export function Hero() {
             <ButtonLink
               href="/portfolio/Daniel-Bedrack-CV-2026.pdf"
               variant="secondary"
-              aria-disabled="true"
-              title="Resume will be available in the final build"
             >
               Download Resume
             </ButtonLink>

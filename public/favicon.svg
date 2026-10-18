@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Daniel Bedrack monogram</title>
+  <rect width="64" height="64" rx="14" fill="#173f38"/>
+  <path d="M16 15h13c12 0 19 6 19 17S41 49 29 49H16V15Zm10 8v18h3c6 0 9-3 9-9s-3-9-9-9h-3Z" fill="#faf7f0"/>
+  <path d="M45 13h5v38h-5z" fill="#b65f45"/>
+</svg>
