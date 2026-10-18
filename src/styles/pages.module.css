@@ -298,3 +298,126 @@
     justify-content: space-between;
   }
 }
+
+.caseHero {
+  padding-block: clamp(4rem, 9vw, 8rem);
+  background: var(--color-surface-strong);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.caseHeroInner {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.backLink {
+  justify-self: start;
+  font-weight: 750;
+}
+
+.caseTitle {
+  max-width: 17ch;
+  font-size: clamp(2.8rem, 7vw, 6rem);
+}
+
+.caseSummary {
+  max-width: 48rem;
+  color: var(--color-ink-soft);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+}
+
+.caseBody {
+  display: grid;
+  max-width: 54rem;
+  gap: var(--space-6);
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+.caseBody section {
+  display: grid;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.caseBody h2,
+.caseContact h2,
+.notFound h1 {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.caseBody p,
+.caseBody ul,
+.caseBody ol {
+  color: var(--color-ink-soft);
+}
+
+.flowList {
+  display: grid;
+  padding: 0;
+  counter-reset: flow;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.flowList li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.flowList li::before {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  color: var(--color-surface-strong);
+  background: var(--color-ink);
+  border-radius: 999px;
+  content: counter(flow);
+  counter-increment: flow;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.limitations {
+  padding: var(--space-4);
+  background: rgb(182 95 69 / 8%);
+  border: 1px solid rgb(182 95 69 / 32%) !important;
+  border-radius: var(--radius-md);
+}
+
+.caseContact {
+  padding-block: var(--space-7);
+  color: var(--color-surface-strong);
+  background: var(--color-ink);
+}
+
+.caseContact > div {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.caseContact a {
+  color: var(--color-ink);
+  background: var(--color-surface-strong);
+}
+
+.notFound {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+}
+
+.notFoundInner {
+  display: grid;
+  max-width: 45rem;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.notFoundInner .heroActions {
+  justify-content: center;
+}

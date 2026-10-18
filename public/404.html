@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting · Daniel Bedrack</title>
+    <script>
+      const repositoryBase = '/portfolio'
+      const requestedPath = window.location.pathname.startsWith(repositoryBase)
+        ? window.location.pathname.slice(repositoryBase.length)
+        : window.location.pathname
+      const capturedPath = `${requestedPath || '/'}${window.location.search}${window.location.hash}`
+      window.location.replace(`${repositoryBase}/?p=${encodeURIComponent(capturedPath)}`)
+    </script>
+  </head>
+  <body>
+    <p>Returning to Daniel Bedrack’s portfolio…</p>
+  </body>
+</html>
