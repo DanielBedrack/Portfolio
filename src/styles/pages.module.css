@@ -126,6 +126,10 @@
   color: inherit;
 }
 
+.inkSection span {
+  color: #f3b8a4;
+}
+
 .processFlow {
   display: grid;
   padding: 0;
