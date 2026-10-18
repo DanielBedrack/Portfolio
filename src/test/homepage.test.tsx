@@ -39,7 +39,7 @@ describe('work-first homepage', () => {
     expect(cards).toHaveLength(3)
     expect(within(cards[0]).getByRole('heading')).toHaveTextContent('Megureit')
     expect(cards[0]).toHaveAttribute('data-featured', 'true')
-    expect(within(cards[1]).getByRole('heading')).toHaveTextContent('Financial')
+    expect(within(cards[1]).getByRole('heading')).toHaveTextContent('Solar Energy Company')
     expect(within(cards[2]).getByRole('heading')).toHaveTextContent('RemindMe')
   })
 

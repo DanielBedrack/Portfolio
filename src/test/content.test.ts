@@ -12,19 +12,36 @@ describe('portfolio content contract', () => {
     ])
   })
 
-  it('preserves the Megureit collaboration boundary', () => {
+  it('presents Megureit as a scalable, role-aware real-estate CRM ecosystem', () => {
     const project = getProjectBySlug('megureit')
+    const publishedCopy = JSON.stringify(project)
 
+    expect(project?.clientDisplayName).toBe('Real-estate company')
     expect(project?.collaboration).toContain('One additional developer')
     expect(project?.collaboration).toContain('Fireberry-Priority synchronization')
     expect(project?.collaboration).toContain('iframe')
+    expect(publishedCopy).toMatch(/leadership.*dashboards/i)
+    expect(publishedCopy).toMatch(/permissions/i)
+    expect(publishedCopy).toMatch(/role-specific screens/i)
+    expect(publishedCopy).toMatch(/Make\.com/i)
+    expect(publishedCopy).toMatch(/custom iframe interfaces embedded inside the CRM platform/i)
+    expect(publishedCopy).toMatch(/Vercel/i)
+    expect(publishedCopy).toMatch(/scalable/i)
   })
 
-  it('keeps the financial client anonymous and omits unverified providers', () => {
+  it('presents the solar project as a cross-department system with AI as one example', () => {
     const project = getProjectBySlug('financial-document-automation')
+    const publishedCopy = JSON.stringify(project)
 
     expect(project?.clientDisplayName).toBe('Solar energy company')
-    expect(JSON.stringify(project)).not.toMatch(/Google Cloud Vision/i)
+    expect(project?.title).toBe('Cross-Department Operations System for a Solar Energy Company')
+    expect(publishedCopy).toMatch(/sales/i)
+    expect(publishedCopy).toMatch(/operations/i)
+    expect(publishedCopy).toMatch(/finance/i)
+    expect(publishedCopy).toMatch(/customer.*flow/i)
+    expect(publishedCopy).toMatch(/Rivhit/i)
+    expect(publishedCopy).toMatch(/example.*AI/i)
+    expect(publishedCopy).not.toMatch(/Google Cloud Vision/i)
   })
 
   it('marks RemindMe as unfinished and publishes its verification limits', () => {

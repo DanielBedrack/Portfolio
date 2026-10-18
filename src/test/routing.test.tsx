@@ -32,6 +32,10 @@ describe('portfolio routes', () => {
       'href',
       '/#work',
     )
+    expect(screen.getByRole('link', { name: 'Contact Me' })).toHaveAttribute(
+      'href',
+      '/portfolio/#contact',
+    )
   })
 
   it('shows status and verification limits for RemindMe', () => {

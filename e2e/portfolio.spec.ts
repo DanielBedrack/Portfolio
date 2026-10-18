@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 const projects = [
   ['megureit', 'Integrated CRM Ecosystem for Megureit'],
-  ['financial-document-automation', 'AI-Powered Financial Document Processing for a Solar Energy Company'],
+  ['financial-document-automation', 'Cross-Department Operations System for a Solar Energy Company'],
   ['remindme', 'RemindMe — Location-Aware Shopping Assistant'],
 ] as const
 

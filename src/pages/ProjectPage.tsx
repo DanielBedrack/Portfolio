@@ -99,7 +99,7 @@ export function ProjectPage({ project: suppliedProject }: ProjectPageProps = {})
         <section className={styles.caseContact} aria-label="Contact Daniel">
           <Container>
             <h2>Have a process that needs a reliable system?</h2>
-            <ButtonLink href="/#contact">Contact Me</ButtonLink>
+            <ButtonLink href="/portfolio/#contact">Contact Me</ButtonLink>
           </Container>
         </section>
       </main>
