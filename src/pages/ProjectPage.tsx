@@ -2,10 +2,13 @@ import { Link, useParams } from 'react-router-dom'
 import { Footer } from '../components/layout/Footer'
 import { Container } from '../components/layout/Container'
 import { ButtonLink } from '../components/ui/ButtonLink'
+import { ExternalLink } from '../components/ui/ExternalLink'
+import { getRouteMeta } from '../app/routeMeta'
 import { getProjectBySlug } from '../content/projects'
 import type { Project } from '../content/types'
 import styles from '../styles/pages.module.css'
 import { NotFoundPage } from './NotFoundPage'
+import { Seo } from '../seo/Seo'
 
 interface ProjectPageProps {
   readonly project?: Project
@@ -21,6 +24,7 @@ export function ProjectPage({ project: suppliedProject }: ProjectPageProps = {})
 
   return (
     <>
+      <Seo meta={getRouteMeta(`/projects/${project.slug}`)} />
       <main>
         <header className={styles.caseHero}>
           <Container className={styles.caseHeroInner}>
@@ -84,9 +88,9 @@ export function ProjectPage({ project: suppliedProject }: ProjectPageProps = {})
             <section>
               <h2>Related links</h2>
               {project.links.map((link) => (
-                <ButtonLink key={link.href} href={link.href} target="_blank" rel="noreferrer" variant="secondary">
+                <ExternalLink key={link.href} href={link.href} className={`${styles.externalButton} ${styles.secondaryButton}`}>
                   {link.label}
-                </ButtonLink>
+                </ExternalLink>
               ))}
             </section>
           )}
