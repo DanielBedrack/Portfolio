@@ -1,0 +1,95 @@
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-canvas);
+}
+
+body {
+  min-width: 20rem;
+  margin: 0;
+  color: var(--color-ink);
+  background:
+    radial-gradient(circle at 85% 5%, rgb(182 95 69 / 8%), transparent 26rem),
+    var(--color-canvas);
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.97rem + 0.15vw, 1.075rem);
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 0.2rem solid var(--color-focus);
+  outline-offset: 0.25rem;
+}
+
+::selection {
+  color: var(--color-surface-strong);
+  background: var(--color-accent-dark);
+}
+
+h1,
+h2,
+h3 {
+  margin-block: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+p {
+  margin-block: 0;
+}
+
+.motion-enter {
+  animation: enter 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .motion-enter {
+    animation: none;
+  }
+}
