@@ -16,6 +16,8 @@
     "typecheck": "tsc -b --pretty false",
     "verify:content": "tsx scripts/verify-content.ts",
     "verify:resume": "node scripts/verify-resume.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
     "check": "npm run typecheck && npm run lint && npm run test:run && npm run verify:content && npm run verify:resume && npm run build"
   },
   "dependencies": {
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",
