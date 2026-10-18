@@ -9,6 +9,7 @@ export const profile: Profile = {
   email: 'danielbedrack@gmail.com',
   linkedIn: 'https://www.linkedin.com/in/danielbedrack',
   github: 'https://github.com/DanielBedrack',
+  process: ['Discover', 'Design', 'Build', 'Test', 'Deploy'],
   howIWork: [
     {
       heading: 'Understand the operation',

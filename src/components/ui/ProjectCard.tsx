@@ -11,7 +11,10 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
   const status = project.status === 'work-in-progress' ? 'Work in progress' : 'Completed'
 
   return (
-    <article className={`${styles.card} ${featured ? styles.featured : ''}`.trim()}>
+    <article
+      className={`${styles.card} ${featured ? styles.featured : ''}`.trim()}
+      data-featured={featured ? 'true' : undefined}
+    >
       <div className={styles.cardHeader}>
         <span className={styles.status}>{status}</span>
         {project.clientDisplayName && <span>{project.clientDisplayName}</span>}

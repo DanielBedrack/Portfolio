@@ -59,6 +59,7 @@ export interface Profile {
   readonly email: string
   readonly linkedIn: string
   readonly github: string
+  readonly process: readonly string[]
   readonly howIWork: readonly ProjectSection[]
   readonly experience: readonly ExperienceItem[]
   readonly education: readonly EducationItem[]
