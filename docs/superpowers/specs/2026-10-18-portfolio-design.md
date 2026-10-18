@@ -1,7 +1,7 @@
 # Daniel Bedrack Portfolio - Design Specification
 
 Date: 18 October 2026
-Status: Approved conversational design, pending written-spec review
+Status: Approved by Daniel on 18 October 2026
 
 ## 1. Purpose
 
