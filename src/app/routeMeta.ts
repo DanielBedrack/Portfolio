@@ -7,7 +7,7 @@ export interface RouteMeta {
   readonly type: 'profile' | 'article' | 'website'
 }
 
-const basePath = '/portfolio'
+const basePath = '/Portfolio'
 
 export function getRouteMeta(pathname: string): RouteMeta {
   const normalizedPath = pathname === '/' ? '/' : pathname.replace(/\/$/, '')

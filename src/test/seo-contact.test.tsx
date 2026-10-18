@@ -15,10 +15,10 @@ describe('route metadata', () => {
     expect(new Set(metadata.map(({ title }) => title))).toHaveLength(routes.length)
     expect(new Set(metadata.map(({ description }) => description))).toHaveLength(routes.length)
     expect(metadata.map(({ canonicalPath }) => canonicalPath)).toEqual([
-      '/portfolio/',
-      '/portfolio/projects/megureit',
-      '/portfolio/projects/financial-document-automation',
-      '/portfolio/projects/remindme',
+      '/Portfolio/',
+      '/Portfolio/projects/megureit',
+      '/Portfolio/projects/financial-document-automation',
+      '/Portfolio/projects/remindme',
     ])
   })
 
@@ -26,7 +26,7 @@ describe('route metadata', () => {
     const meta = getRouteMeta('/missing')
 
     expect(meta.title).toMatch(/Page not found/)
-    expect(meta.canonicalPath).toBe('/portfolio/missing')
+    expect(meta.canonicalPath).toBe('/Portfolio/missing')
   })
 
   it('writes description, canonical, Open Graph and Person JSON-LD', async () => {

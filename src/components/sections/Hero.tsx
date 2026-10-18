@@ -15,7 +15,7 @@ export function Hero() {
           <div className={styles.heroActions}>
             <ButtonLink href="#work">View My Work</ButtonLink>
             <ButtonLink
-              href="/portfolio/Daniel-Bedrack-CV-2026.pdf"
+              href="/Portfolio/Daniel-Bedrack-CV-2026.pdf"
               variant="secondary"
             >
               Download Resume

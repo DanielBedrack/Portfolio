@@ -3,5 +3,5 @@ export function restoreGitHubPagesPath(location: Location, history: History): vo
 
   if (!capturedPath || !capturedPath.startsWith('/')) return
 
-  history.replaceState(null, '', `/portfolio${capturedPath}`)
+  history.replaceState(null, '', `/Portfolio${capturedPath}`)
 }

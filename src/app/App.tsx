@@ -15,7 +15,7 @@ export function PortfolioRoutes() {
 
 export function App() {
   return (
-    <BrowserRouter basename="/portfolio">
+    <BrowserRouter basename="/Portfolio">
       <PortfolioRoutes />
     </BrowserRouter>
   )

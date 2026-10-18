@@ -16,7 +16,7 @@ npx playwright install chromium
 npm run dev
 ```
 
-Vite prints the local development URL after startup. The production site uses the `/portfolio/` base path.
+Vite prints the local development URL after startup. The production site uses the case-sensitive `/Portfolio/` base path.
 
 ## Verification
 

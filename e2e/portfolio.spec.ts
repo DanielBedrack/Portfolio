@@ -6,6 +6,19 @@ const projects = [
   ['remindme', 'RemindMe — Location-Aware Shopping Assistant'],
 ] as const
 
+test('uses the case-correct GitHub Pages project path', async ({ page }) => {
+  const response = await page.goto('http://127.0.0.1:4173/Portfolio/')
+
+  expect(response?.status()).toBe(200)
+  expect(new URL(page.url()).pathname).toBe('/Portfolio/')
+
+  const assetPaths = await page.locator('script[src], link[rel="stylesheet"]').evaluateAll(
+    (elements) => elements.map((element) => element.getAttribute('src') ?? element.getAttribute('href')),
+  )
+  expect(assetPaths).not.toHaveLength(0)
+  expect(assetPaths.every((path) => path?.startsWith('/Portfolio/'))).toBeTruthy()
+})
+
 test('homepage navigation and responsive layout', async ({ page }) => {
   await page.goto('./')
   await expect(page.getByRole('heading', { level: 1 })).toContainText('AI & Automation Developer')
@@ -25,7 +38,7 @@ for (const [slug, title] of projects) {
     await page.goto(`./projects/${slug}`)
     await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible()
     await page.getByRole('link', { name: 'Back to all projects' }).click()
-    await expect(page).toHaveURL(/\/portfolio\/?#work$/)
+    await expect(page).toHaveURL(/\/Portfolio\/?#work$/)
   })
 }
 
@@ -59,7 +72,7 @@ test('contact links and resume asset are valid', async ({ page, request }) => {
   )
 
   const resumeHref = await page.getByRole('link', { name: 'Download Resume' }).getAttribute('href')
-  expect(resumeHref).toBe('/portfolio/Daniel-Bedrack-CV-2026.pdf')
+  expect(resumeHref).toBe('/Portfolio/Daniel-Bedrack-CV-2026.pdf')
   const response = await request.get(resumeHref ?? '')
   expect(response.ok()).toBeTruthy()
   expect(response.headers()['content-type']).toBe('application/pdf')

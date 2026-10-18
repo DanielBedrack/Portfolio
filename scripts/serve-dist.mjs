@@ -18,7 +18,7 @@ const mimeTypes = {
 
 createServer((request, response) => {
   const requestedUrl = new URL(request.url ?? '/', `http://${request.headers.host}`)
-  const relativePath = decodeURIComponent(requestedUrl.pathname).replace(/^\/portfolio\/?/, '')
+  const relativePath = decodeURIComponent(requestedUrl.pathname).replace(/^\/Portfolio\/?/, '')
   const safePath = normalize(relativePath || 'index.html').replace(/^(\.\.[/\\])+/, '')
   const candidate = join(root, safePath)
   const filePath = existsSync(candidate) && statSync(candidate).isFile()

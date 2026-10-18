@@ -34,7 +34,7 @@ describe('portfolio routes', () => {
     )
     expect(screen.getByRole('link', { name: 'Contact Me' })).toHaveAttribute(
       'href',
-      '/portfolio/#contact',
+      '/Portfolio/#contact',
     )
   })
 
@@ -82,7 +82,7 @@ describe('GitHub Pages path restoration', () => {
   it('restores a captured project path', () => {
     const replaceState = vi.fn()
     const location = {
-      pathname: '/portfolio/',
+      pathname: '/Portfolio/',
       search: '?p=%2Fprojects%2Fremindme',
       hash: '',
     } as Location
@@ -90,12 +90,12 @@ describe('GitHub Pages path restoration', () => {
 
     restoreGitHubPagesPath(location, history)
 
-    expect(replaceState).toHaveBeenCalledWith(null, '', '/portfolio/projects/remindme')
+    expect(replaceState).toHaveBeenCalledWith(null, '', '/Portfolio/projects/remindme')
   })
 
   it('leaves a normal homepage URL unchanged', () => {
     const replaceState = vi.fn()
-    const location = { pathname: '/portfolio/', search: '', hash: '' } as Location
+    const location = { pathname: '/Portfolio/', search: '', hash: '' } as Location
     const history = { replaceState } as unknown as History
 
     restoreGitHubPagesPath(location, history)

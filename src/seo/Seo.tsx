@@ -21,7 +21,7 @@ export function Seo({ meta }: { readonly meta: RouteMeta }) {
     upsertMeta('property', 'og:description', meta.description)
     upsertMeta('property', 'og:type', meta.type)
     upsertMeta('property', 'og:url', canonicalUrl)
-    upsertMeta('property', 'og:image', `${window.location.origin}/portfolio/og-default.png`)
+    upsertMeta('property', 'og:image', `${window.location.origin}/Portfolio/og-default.png`)
 
     let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')
     if (!canonical) {
@@ -46,7 +46,7 @@ export function Seo({ meta }: { readonly meta: RouteMeta }) {
       jobTitle: profile.title,
       email: `mailto:${profile.email}`,
       sameAs: [profile.linkedIn, profile.github],
-      url: `${window.location.origin}/portfolio/`,
+      url: `${window.location.origin}/Portfolio/`,
     })
   }, [meta])
 

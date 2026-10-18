@@ -6,12 +6,12 @@ export default defineConfig({
   retries: 0,
   reporter: 'line',
   use: {
-    baseURL: 'http://127.0.0.1:4173/portfolio/',
+    baseURL: 'http://127.0.0.1:4173/Portfolio/',
     trace: 'retain-on-failure',
   },
   webServer: {
     command: 'npm run build && node scripts/serve-dist.mjs',
-    url: 'http://127.0.0.1:4173/portfolio/',
+    url: 'http://127.0.0.1:4173/Portfolio/',
     reuseExistingServer: false,
     timeout: 120_000,
   },
