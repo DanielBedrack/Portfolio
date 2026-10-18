@@ -62,6 +62,20 @@ describe('work-first homepage', () => {
     expect(screen.queryByText(/Optimate.*Present/i)).not.toBeInTheDocument()
   })
 
+  it('shows the approved AI and messaging tools in the skills section', () => {
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>,
+    )
+
+    const skills = screen.getByRole('region', { name: 'Toolbox Skills' })
+
+    expect(within(skills).getByText('Claude')).toBeInTheDocument()
+    expect(within(skills).getByText('Codex')).toBeInTheDocument()
+    expect(within(skills).getByText('ManyChat')).toBeInTheDocument()
+  })
+
   it('links navigation to the approved section anchors', () => {
     render(
       <MemoryRouter>
