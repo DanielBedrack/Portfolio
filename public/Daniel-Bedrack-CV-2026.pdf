@@ -1,630 +1,114 @@
 %PDF-1.4
-%âãÏÓ
+%“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
 <<
-/Producer (ReportLab PDF Library \055 \050opensource\051)
-/Author (Daniel Bedrack)
-/CreationDate (D\07220261018151144\05303\04700\047)
-/Creator (\050unspecified\051)
-/Keywords ()
-/ModDate (D\07220261018151144\05303\04700\047)
-/Subject (\050unspecified\051)
-/Title (Daniel Bedrack CV 2026)
-/Trapped (\057False)
+/F1 2 0 R /F2 3 0 R
 >>
 endobj
 2 0 obj
 <<
-/Type /Pages
-/Count 1
-/Kids [ 4 0 R ]
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
 >>
 endobj
 3 0 obj
 <<
-/Type /Catalog
-/Pages 2 0 R
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
 >>
 endobj
 4 0 obj
 <<
-/Contents 5 0 R
-/MediaBox [ 0 0 595.2756 841.8898 ]
-/Resources <<
-/Font <<
-/F1 6 0 R
-/F1-0 7 0 R
-/F2 8 0 R
-/F2-0 9 0 R
->>
-/ProcSet [ /ImageB /ImageC /ImageI /PDF /Text ]
->>
-/Rotate 0
-/Trans <<
->>
-/Type /Page
-/Annots [ 10 0 R 11 0 R 12 0 R 13 0 R 14 0 R ]
-/Parent 2 0 R
+/A <<
+/S /URI /Type /Action /URI (tel:+972535215787)
+>> /Border [ 0 0 0 ] /Rect [ 92.826 731.7 141.4432 742.55 ] /Subtype /Link /Type /Annot
 >>
 endobj
 5 0 obj
 <<
-/Length 9815
+/A <<
+/S /URI /Type /Action /URI (mailto:danielbedrack@gmail.com)
+>> /Border [ 0 0 0 ] /Rect [ 154.4432 731.7 251.7602 742.55 ] /Subtype /Link /Type /Annot
 >>
-stream
-q
-1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
-q
-.713725 .372549 .270588 RG
-2 w
-n 39.68504 816.378 m 555.5906 816.378 l S
-Q
-q
-1 0 0 1 39.68504 773.0394 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 2 Tm /F2 30 Tf 32 TL (DANIEL BEDRACK) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 755.0394 cm
-q
-BT 1 0 0 1 0 2 Tm 14 TL /F1 12 Tf .090196 .247059 .219608 rg (AI & Automation Developer | Technical Project Manager) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 715.5394 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 2 Tm /F2 11 Tf 13 TL (PROFESSIONAL PROFILE) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 710.8394 cm
-q
-.7 w
-1 J
-.843137 .823529 .780392 RG
-n 0 0 m 515.9055 0 l S
-Q
-Q
-q
-1 0 0 1 39.68504 664.6394 cm
-q
-.301961 .4 .372549 rg
-BT 1 0 0 1 0 34.6 Tm /F1 8.6 Tf 10.8 TL (AI solutions and automation developer with experience delivering approximately 20 client projects from discovery through rollout. Builds) Tj T* (end-to-end workflows across Make.com, n8n, monday.com, Fireberry CRM, APIs and AI tools, combining hands-on development with) Tj T* (technical project management. Strong at translating business processes into reliable systems that reduce manual work and improve) Tj T* (operational visibility.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 643.6394 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 2 Tm /F2 11 Tf 13 TL (PROFESSIONAL EXPERIENCE) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 638.9394 cm
-q
-.7 w
-1 J
-.843137 .823529 .780392 RG
-n 0 0 m 515.9055 0 l S
-Q
-Q
-q
-1 0 0 1 39.68504 611.4394 cm
-q
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 0 11.5 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.5 Tm /F2 11.5 Tf 13 TL (Optimate) Tj T* ET
-Q
-Q
-q
-1 0 0 1 0 1 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.5 Tm /F2 9 Tf 10.5 TL (Automation Developer and Technical Project Manager) Tj T* ET
-Q
-Q
-q
-1 0 0 1 377.0079 14.5 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.8 Tm /F2 8.2 Tf 10 TL 26.88308 0 Td (March 2025 - September 2026) Tj T* -26.88308 0 Td ET
-Q
-Q
-q
-Q
-Q
-Q
-q
-1 0 0 1 39.68504 591.0394 cm
-q
-BT 1 0 0 1 1 12.3 Tm /F1 10 Tf 12 TL .301961 .4 .372549 rg (-) Tj ET
-.301961 .4 .372549 rg
-BT 1 0 0 1 10 12.3 Tm /F1 8.1 Tf 10.2 TL .33 0 Td (Lead approximately 20 client projects from requirements gathering and technical specification through development, testing, deployment,) Tj T* -0.33 0 Td (training and ongoing support.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 569.1394 cm
-q
-BT 1 0 0 1 1 12.3 Tm /F1 10 Tf 12 TL .301961 .4 .372549 rg (-) Tj ET
-.301961 .4 .372549 rg
-BT 1 0 0 1 10 12.3 Tm /F1 8.1 Tf 10.2 TL .33 0 Td (Design and maintain automation and AI solutions using Make.com, n8n, monday.com, Fireberry CRM, Google Workspace, REST APIs,) Tj T* -0.33 0 Td (webhooks, JavaScript, Python, SQL and JSON.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 547.2394 cm
-q
-BT 1 0 0 1 1 12.3 Tm /F1 10 Tf 12 TL .301961 .4 .372549 rg (-) Tj ET
-.301961 .4 .372549 rg
-BT 1 0 0 1 10 12.3 Tm /F1 8.1 Tf 10.2 TL .33 0 Td (Built an AI-assisted Gmail-to-monday.com workflow that identifies and classifies financial documents from recognized suppliers and) Tj T* -0.33 0 Td (customers, creates structured records and substantially reduces manual processing.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 525.3394 cm
-q
-BT 1 0 0 1 1 12.3 Tm /F1 10 Tf 12 TL .301961 .4 .372549 rg (-) Tj ET
-.301961 .4 .372549 rg
-BT 1 0 0 1 10 12.3 Tm /F1 8.1 Tf 10.2 TL .33 0 Td (Developed a WhatsApp service bot with ManyChat and n8n that answers routine questions, collects relevant details and routes cases) Tj T* -0.33 0 Td (requiring human assistance into a representative callback process.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 503.4394 cm
-q
-BT 1 0 0 1 1 12.3 Tm /F1 10 Tf 12 TL .301961 .4 .372549 rg (-) Tj ET
-.301961 .4 .372549 rg
-BT 1 0 0 1 10 12.3 Tm /F1 8.1 Tf 10.2 TL .33 0 Td (Implemented an end-to-end payment workflow integrating monday.com, Morning and Make.com for invoices, receipts, payment requests,) Tj T* -0.33 0 Td (approvals, status tracking, reminders, document storage and reconciliation.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 499.9394 cm
-Q
-q
-1 0 0 1 39.68504 475.4394 cm
-q
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 0 11.5 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.5 Tm /F2 11.5 Tf 13 TL (Tesla) Tj T* ET
-Q
-Q
-q
-1 0 0 1 0 1 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.5 Tm /F2 9 Tf 10.5 TL (Delivery Advisor) Tj T* ET
-Q
-Q
-q
-1 0 0 1 377.0079 14.5 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.8 Tm /F2 8.2 Tf 10 TL 34.17288 0 Td (February 2024 - March 2025) Tj T* -34.17288 0 Td ET
-Q
-Q
-q
-Q
-Q
-Q
-q
-1 0 0 1 39.68504 455.0394 cm
-q
-BT 1 0 0 1 1 12.3 Tm /F1 10 Tf 12 TL .301961 .4 .372549 rg (-) Tj ET
-.301961 .4 .372549 rg
-BT 1 0 0 1 10 12.3 Tm /F1 8.1 Tf 10.2 TL .33 0 Td (Managed the vehicle delivery process from purchase confirmation through final handover, coordinating customer documentation and case) Tj T* -0.33 0 Td (progress in Tesla's CRM while resolving issues with sales, logistics, service and operations teams.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 451.5394 cm
-Q
-q
-1 0 0 1 39.68504 427.0394 cm
-q
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 0 11.5 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.5 Tm /F2 11.5 Tf 13 TL (Sela College) Tj T* ET
-Q
-Q
-q
-1 0 0 1 0 1 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.5 Tm /F2 9 Tf 10.5 TL (Coding Support and Assignment Reviewer) Tj T* ET
-Q
-Q
-q
-1 0 0 1 377.0079 14.5 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.8 Tm /F2 8.2 Tf 10 TL 34.17288 0 Td (March 2023 - February 2024) Tj T* -34.17288 0 Td ET
-Q
-Q
-q
-Q
-Q
-Q
-q
-1 0 0 1 39.68504 406.6394 cm
-q
-BT 1 0 0 1 1 12.3 Tm /F1 10 Tf 12 TL .301961 .4 .372549 rg (-) Tj ET
-.301961 .4 .372549 rg
-BT 1 0 0 1 10 12.3 Tm /F1 8.1 Tf 10.2 TL .33 0 Td (Supported software development students, explained technical concepts, reviewed assignments and guided learners toward independent) Tj T* -0.33 0 Td (problem-solving.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 385.6394 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 2 Tm /F2 11 Tf 13 TL (TECHNICAL SKILLS) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 380.9394 cm
-q
-.7 w
-1 J
-.843137 .823529 .780392 RG
-n 0 0 m 515.9055 0 l S
-Q
-Q
-q
-1 0 0 1 39.68504 367.9394 cm
-q
-BT 1 0 0 1 0 1.9 Tm 10 TL /F2 8.1 Tf .301961 .4 .372549 rg (Automation and AI:) Tj /F1 8.1 Tf ( Make.com, n8n, ManyChat, HEYY, Codex, Claude, Gemini) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 356.4394 cm
-q
-BT 1 0 0 1 0 1.9 Tm 10 TL /F2 8.1 Tf .301961 .4 .372549 rg (Business Platforms:) Tj /F1 8.1 Tf ( monday.com, Fireberry CRM, Morning, Google Workspace) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 344.9394 cm
-q
-BT 1 0 0 1 0 1.9 Tm 10 TL /F2 8.1 Tf .301961 .4 .372549 rg (Development:) Tj /F1 8.1 Tf ( JavaScript, Python, REST APIs, webhooks, JSON, SQL) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 333.4394 cm
-q
-BT 1 0 0 1 0 1.9 Tm 10 TL /F2 8.1 Tf .301961 .4 .372549 rg (Project Delivery:) Tj /F1 8.1 Tf ( Requirements analysis, technical specifications, testing, deployment, training, support and troubleshooting) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 312.4394 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 2 Tm /F2 11 Tf 13 TL (EDUCATION) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 307.7394 cm
-q
-.7 w
-1 J
-.843137 .823529 .780392 RG
-n 0 0 m 515.9055 0 l S
-Q
-Q
-q
-1 0 0 1 39.68504 280.2394 cm
-q
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 0 11.5 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.5 Tm /F2 11.5 Tf 13 TL (Sela College) Tj T* ET
-Q
-Q
-q
-1 0 0 1 0 1 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.5 Tm /F2 9 Tf 10.5 TL (Software Development Program - Lohamim Le'Hightech) Tj T* ET
-Q
-Q
-q
-1 0 0 1 377.0079 14.5 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.8 Tm /F2 8.2 Tf 10 TL 52.85248 0 Td (March 2022 - July 2023) Tj T* -52.85248 0 Td ET
-Q
-Q
-q
-Q
-Q
-Q
-q
-1 0 0 1 39.68504 258.6394 cm
-q
-.301961 .4 .372549 rg
-BT 1 0 0 1 0 13 Tm /F1 8.6 Tf 10.8 TL (Full-stack development including React, Angular, JavaScript, TypeScript, Node.js, C#/.NET, Python, SQL, MongoDB, Firebase, Azure) Tj T* (and Docker fundamentals.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 244.1394 cm
-q
-0 0 0 rg
-BT /F1 10 Tf 12 TL ET
-q
-1 0 0 1 0 11.5 cm
-Q
-q
-1 0 0 1 0 1 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.5 Tm /F2 9 Tf 10.5 TL (Advanced Software Program - Yahalom) Tj T* ET
-Q
-Q
-q
-1 0 0 1 377.0079 1.5 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 1.8 Tm /F2 8.2 Tf 10 TL 52.85248 0 Td (March 2023 - July 2023) Tj T* -52.85248 0 Td ET
-Q
-Q
-q
-Q
-Q
-Q
-q
-1 0 0 1 39.68504 233.3394 cm
-q
-.301961 .4 .372549 rg
-BT 1 0 0 1 0 2.2 Tm /F1 8.6 Tf 10.8 TL (Advanced software development, architecture and problem-solving program for high-performing students.) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 212.3394 cm
-q
-.090196 .247059 .219608 rg
-BT 1 0 0 1 0 2 Tm /F2 11 Tf 13 TL (ADDITIONAL EXPERIENCE AND LANGUAGES) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 207.6394 cm
-q
-.7 w
-1 J
-.843137 .823529 .780392 RG
-n 0 0 m 515.9055 0 l S
-Q
-Q
-q
-1 0 0 1 39.68504 194.6394 cm
-q
-BT 1 0 0 1 0 1.9 Tm 10 TL /F2 8.1 Tf .301961 .4 .372549 rg (Military Service:) Tj /F1 8.1 Tf ( Golani Special Forces, head navigator and sharpshooter | 2016 - 2019) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 183.1394 cm
-q
-BT 1 0 0 1 0 1.9 Tm 10 TL /F2 8.1 Tf .301961 .4 .372549 rg (Volunteer Experience:) Tj /F1 8.1 Tf ( Ha-Kfar Ha-Yarok Youth Village | 2015 - 2016) Tj T* ET
-Q
-Q
-q
-1 0 0 1 39.68504 171.6394 cm
-q
-BT 1 0 0 1 0 1.9 Tm 10 TL /F2 8.1 Tf .301961 .4 .372549 rg (Languages:) Tj /F1 8.1 Tf ( Hebrew - Fluent | English - Fluent) Tj T* ET
-Q
-Q
- 
-
-Q
-
-q
-0.0 0.0 595.2756 841.8898 re
-W
-n
-1 0 0 1 0 0 cm
-BT
-/F1-0 12 Tf
-14.4 TL
-ET
-0.321569 0.415686 0.4 rg
-BT
-/F2-0 7.25 Tf
-8.7 TL
-ET
-BT
-1 0 0 1 39.685 738 Tm
-(CONTACT) Tj
-T*
-ET
-BT
-/F1-0 7.25 Tf
-8.7 TL
-ET
-BT
-1 0 0 1 80.323 738 Tm
-(053\0555215787) Tj
-T*
-ET
-BT
-/F1-0 7.25 Tf
-8.7 TL
-ET
-BT
-1 0 0 1 128.2473 738 Tm
-(danielbedrack\100gmail\056com) Tj
-T*
-ET
-BT
-/F1-0 7.25 Tf
-8.7 TL
-ET
-BT
-1 0 0 1 218.9683 738 Tm
-(linkedin\056com\057in\057danielbedrack) Tj
-T*
-ET
-BT
-/F1-0 7.25 Tf
-8.7 TL
-ET
-BT
-1 0 0 1 319.2593 738 Tm
-(github\056com\057DanielBedrack) Tj
-T*
-ET
-BT
-/F2-0 7.25 Tf
-8.7 TL
-ET
-BT
-1 0 0 1 409.074 738 Tm
-(danielbedrack\056github\056io\057Portfolio) Tj
-T*
-ET
-Q
-
-
-endstream
 endobj
 6 0 obj
 <<
-/BaseFont /Helvetica
-/Encoding /WinAnsiEncoding
-/Name /F1
-/Subtype /Type1
-/Type /Font
+/A <<
+/S /URI /Type /Action /URI (https://danielbedrack.github.io/Portfolio/)
+>> /Border [ 0 0 0 ] /Rect [ 264.7602 731.7 393.5757 742.55 ] /Subtype /Link /Type /Annot
 >>
 endobj
 7 0 obj
 <<
-/BaseFont /Helvetica
-/Encoding /WinAnsiEncoding
-/Name /F1
-/Subtype /Type1
-/Type /Font
+/A <<
+/S /URI /Type /Action /URI (https://www.linkedin.com/in/danielbedrack)
+>> /Border [ 0 0 0 ] /Rect [ 92.826 717.5 201.033 728.35 ] /Subtype /Link /Type /Annot
 >>
 endobj
 8 0 obj
 <<
-/BaseFont /Helvetica-Bold
-/Encoding /WinAnsiEncoding
-/Name /F2
-/Subtype /Type1
-/Type /Font
+/A <<
+/S /URI /Type /Action /URI (https://github.com/DanielBedrack)
+>> /Border [ 0 0 0 ] /Rect [ 219.033 717.5 315.3187 728.35 ] /Subtype /Link /Type /Annot
 >>
 endobj
 9 0 obj
 <<
-/BaseFont /Helvetica-Bold
-/Encoding /WinAnsiEncoding
-/Name /F2
-/Subtype /Type1
-/Type /Font
+/Annots [ 4 0 R 5 0 R 6 0 R 7 0 R 8 0 R ] /Contents 13 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 12 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 
+  /Trans <<
+
+>> /Type /Page
 >>
 endobj
 10 0 obj
 <<
-/Type /Annot
-/Subtype /Link
-/P 4 0 R
-/Rect [ 80.323 736.8 123.04725 746.45 ]
-/H /I
-/Border [ 0 0 0 ]
-/A <<
-/S /URI
-/URI (tel\072\053972535215787)
->>
+/PageMode /UseNone /Pages 12 0 R /Type /Catalog
 >>
 endobj
 11 0 obj
 <<
-/Type /Annot
-/Subtype /Link
-/P 4 0 R
-/Rect [ 128.24725 736.8 213.76825 746.45 ]
-/H /I
-/Border [ 0 0 0 ]
-/A <<
-/S /URI
-/URI (mailto\072danielbedrack\100gmail\056com)
->>
+/Author (Daniel Bedrack) /CreationDate (D:20261019170509+03'00') /Creator (anonymous) /Keywords () /ModDate (D:20261019170509+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (AI and Automation Developer | Technical Project Manager) /Title (Daniel Bedrack CV 2026) /Trapped /False
 >>
 endobj
 12 0 obj
 <<
-/Type /Annot
-/Subtype /Link
-/P 4 0 R
-/Rect [ 218.96825 736.8 314.05925 746.45 ]
-/H /I
-/Border [ 0 0 0 ]
-/A <<
-/S /URI
-/URI (https\072\057\057www\056linkedin\056com\057in\057danielbedrack)
->>
+/Count 1 /Kids [ 9 0 R ] /Type /Pages
 >>
 endobj
 13 0 obj
 <<
-/Type /Annot
-/Subtype /Link
-/P 4 0 R
-/Rect [ 319.25925 736.8 403.874 746.45 ]
-/H /I
-/Border [ 0 0 0 ]
-/A <<
-/S /URI
-/URI (https\072\057\057github\056com\057DanielBedrack)
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 3056
 >>
->>
-endobj
-14 0 obj
-<<
-/Type /Annot
-/Subtype /Link
-/P 4 0 R
-/Rect [ 409.074 736.8 522.2755 746.45 ]
-/H /I
-/Border [ 0 0 0 ]
-/A <<
-/S /URI
-/URI (https\072\057\057danielbedrack\056github\056io\057Portfolio\057)
->>
->>
+stream
+Gatm=gN"3(&q/A5<5_8Mlu#(X^-VKW/I!cL`f`eF1[E)U.7%**(Xj12-Ka@_A5tQ2#oEs^%LZrIH-_[%9.k#=T5/m&$c_%aft.bIF$2FqB5ZW1Ccl6\nV,G3rJh[LLOKF^F1b6uN$<FhH/Z$KMj4%B'=,\rj6)#J@H_eo@CpiYf]^1d`@X#dj'[D$,QOH?&^+c&7]4:S(LMks^Z._I<rBt>$oIN:SIQSlfK]8hl`7j`]cZn8]"QGi@cMBCr9rp$24k:9%R^P5_*!n2]ja42DHZ0,0;M?G?`\q/99HKofN9Ej<$kkTgJ!)18\r.1Pg;bk>c#Iba"u;e:0`Ru-\kt3;sL;aB:kXOqo4TOc1SU$)o)%,"MqA+6sb3b\eY(dcu[*"e2`G32agpS^:-rnjf&r/,,Q5R*r\6*E2f?q0?t1UY8oTnG3aZ6B-rO^3H:jDGH8(0?7W#$)F?BW@Y@o2dg%Um.67)sVXL+DE>FgQ#c@hR[lQ&&87UPUHiHFghm\m:Ou1VqDYl[PZobEfG^FZ+@5&U*h->/ZN':JU#J8-Q^]t9%KZ4Nc.-j8Q5P>?cSB_lRg.5ARMZWSQTti!9eteTF[boRdmEhu)2V4t)L<UT3Vi5O5Ge.VI8&UIFms$?ORL&g\aV@"81WGd)9RiBg,1N',!'c2+'PqL\4D4DV?EgEQ'9*Z@<m3@*cK6\,9'NX#Sn@o"NVI3rl?t,31hS#'2@J?Z$[^CV_nFKZ0KR<tSc_b0"=:RodO8t:KheOnD'+.eR@&d=b'S>>)Q\:4AR1#YL"7_l0RR^];fZN2?fXqP*](ut#Sa7jCk*;^Y6e(2J[rpO[P0C*hf.5Ha>?>e?q&)a>Tq8b3%8p:$@%(G$!p'GA6NZ4+i\o("O#DB+Vm'^LQe-nQ:M"oQ<YFddd9"P_\=Q[Y$=608heDd8MJ@na]qT:P/Z-8HS:%l=LI%MDA`<?G&VX_\F,p7&7H87mG3N$%ph11?.W3F45M-5412m`bJI6N52ZmML261ELOgO-XquBqeZM;giE7p+?NA'6Ca><;-#/P`[.d.Q/*ZFgdl)%>Q/oWRQ4j.b@=&P3#ZY?SXiuUq`%#G_).BR$UU^oAK<Q!H"tp.5:B_.1T=tq-1@[kkAu9aofo-a=$A7:/[e93f8E;qjRaBQ/ZdYraHo\+]C[>s^CS,UqG55&#F`fCu(+2X!RT\,:]Nd'D1S&TA(Du33:j=o#qBD94e//TXOV[`,$h>#DDMJ5.dHh<]HE$QG..oZ0-=?=31t^Vl1d2[X[o6?^OLW+J`FQ.E"5\Ic.m?Q\\O<63f>Uu^oB;O7Z16<,k5).kDM8g_T,Q[J!1HXdN'nYT4O5>3HHIjs][=+?L2JfS/<n=,8d^8%lnh<KSM_MXA]iIiU6_]<.;cIooq1GN.fY0L.QXq-Ae#o>FoW5bKohNZZAoTcGF:^kjX`'j1+>g('dGc/>#Y!4Or#+XEJ8#3,:B[,:-GIN,j.ik&:)g-5;=0_!At\q<7pXFFP^:U=Y@"F`8I0LC/b9Jf0)_.3K+lc3PegHUmM3>!"ab\;%cd"/VkW"AWR1M=f`/T5RNrOfoXS^`$jT3hoE%MnZ&=g:hD+GM9%GV31SWd)?1\&QC5gVHo*=m2P<c=^fft+S2L01edoa63e"J=.Kds1qfJ1-/c",+Uq-ZdUR5VY!UYK^(S,F4[Dj>4Y;7/#Bd=7H5c"fQ"Q!-VO2X2Z.3ukO\\opQC0$jL*s,c53MCci5k=u](G_PM*iW?S?d]ghVbJtY"J#j27TJtZcLa'n,Og<m(rl^EnBL#=#b<[C,06a/bQflE8tOEqo`FWD/K$R*HN]pA$1?OO@*Q8]:e6"0AeDE0+(H'j!LEG0)pAIiM7H=0Ap%8.D.J3?=X#Q`?$(@<0=/VrmQc#ub\BC)$paoe'$j8Ef!)_7R*Al!;O;hP=6tMMK5?reA.3(Vao0OG%9N6_QS9;ld:u+]A=fQP/V)qf;)]md")c25Wk#u+_bFm/O6RL.Oe90`r?uXOXj9Ndc?b/'Za\EF\mkUdXMes*e47&5.Gp==('ReHmcc/hE+HMJV*-gn,Lb[s@O9"R=W+Le`g,g&lZaqQ17G)S^+UOQ-?eW)!3.:oJI92MY/'ME/fc:S&dBsElf?R>)XFmR?F(8LABL.p=\@/Hd*Qd>Hi^;A&rFtU$&#Ll3qh)mZ`;UJDj7ufTp-3U%XK5#YBj:u8"Zu>_pR4?8`+UZEG(QD&'QMK3:g*k@@]FITUi4=cL,bJr?&JO(ljJq]p;#E``oFgaE^Kk)XQMBldl?PE@S]_7<-f\#Wg3eq7=^tSUXu$hH\9(QP[,g(DtVZr$2LL-Oe`!NnblV7`>pF/fnZu&:bJ_Z:Ses'3pICkcK)2hS("c(+/`a)8a7#et9;FeHr7qXfhro8Ua:g0PLF3hj&Ms]:`[1W\mmqj3Vh<D`;[EDp*%JX0pdQ0oUZ:3T<CrcAjM`=Dpfaria$'q!.#<mBGRR1mN5l`BH91%2DiD-N;BEV8!.@l?[okP.$di*iAA'dbMW_r^ddToDI=\H<0F?&D]m.p+N(NW98OO(MkLKr[;E#.Zr=_i9N#*4W:Gg"ID_<_=Xunm7pBD-E8nmi(ibE<S'rXV;g1WCP_M,.I-ZZ^fBP:MRN8?GL#khr8a#mJ17&Rrqd&,5jKQ`:[HY&DJ<D'5gL9="l@kQ"*imT$1'H9;SA4$e]Bh9)`Oeo'XXE3bphBmBq(KnI*U:A5<?KTW^o_RP04lIWZOg<$[VQkTm[=U4!-#9-o&=!0OXI1X&oSOmA`0:3B"^GBqCai]o$0fT?t*A>?qJUqu*Sco*]Ti^$`48p\OI4mcE@0NoP^uHb3Zr+.S&F\:/;k(]+"0Z1O175>IXm*>%3afTCKZ'i-+pdCd9Mpn0FLr6OW539;YNj&jLlD:P.h9/@=,T:3G/_VM#SpmdN]/Blc>RoX*(#cJYXrZ66?a1g`H@6<,_rQ(J#ms2qBqNY^iJUQ&p[_1Ln;KV_Br!KQ5mBcZ>MQ/7<a8ph<FUEh\Y]>NhY-a8Bh8CNiEN1:orJM-5R?IAno4UW#]D+V"ZG%p~>endstream
 endobj
 xref
-0 15
+0 14
 0000000000 65535 f 
-0000000015 00000 n 
-0000000346 00000 n 
-0000000405 00000 n 
-0000000454 00000 n 
-0000000744 00000 n 
-0000010611 00000 n 
-0000010718 00000 n 
-0000010825 00000 n 
-0000010937 00000 n 
-0000011049 00000 n 
-0000011220 00000 n 
-0000011410 00000 n 
-0000011623 00000 n 
-0000011819 00000 n 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000483 00000 n 
+0000000660 00000 n 
+0000000849 00000 n 
+0000001034 00000 n 
+0000001212 00000 n 
+0000001459 00000 n 
+0000001529 00000 n 
+0000001854 00000 n 
+0000001914 00000 n 
 trailer
 <<
-/Size 15
-/Root 3 0 R
-/Info 1 0 R
+/ID 
+[<9afc36439fbe06eaa9c0f8b4f875330f><9afc36439fbe06eaa9c0f8b4f875330f>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 11 0 R
+/Root 10 0 R
+/Size 14
 >>
 startxref
-12030
+5062
 %%EOF
