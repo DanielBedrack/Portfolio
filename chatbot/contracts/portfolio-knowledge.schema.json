@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://portfolio.local/contracts/portfolio-knowledge.schema.json",
+  "title": "PortfolioKnowledge",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "profileClaims", "experience", "skills", "projects"],
+  "properties": {
+    "version": { "type": "string", "const": "1.0.0" },
+    "profileClaims": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/claim" } },
+    "experience": { "type": "array", "minItems": 3, "items": { "$ref": "#/definitions/experience" } },
+    "skills": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/claim" } },
+    "projects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["megureit", "financialDocumentAutomation", "remindme"],
+      "properties": {
+        "megureit": { "$ref": "#/definitions/project" },
+        "financialDocumentAutomation": { "$ref": "#/definitions/project" },
+        "remindme": { "$ref": "#/definitions/project" }
+      }
+    }
+  },
+  "definitions": {
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceId", "text", "verification"],
+      "properties": {
+        "sourceId": { "type": "string", "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$" },
+        "text": { "type": "string", "minLength": 1 },
+        "verification": {
+          "type": "string",
+          "enum": ["approved", "firsthand", "repository-verified", "unverified-limit", "work-in-progress"]
+        }
+      }
+    },
+    "experience": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceId", "company", "role", "startDate", "endDate", "claims"],
+      "properties": {
+        "sourceId": { "type": "string", "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$" },
+        "company": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "startDate": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+        "endDate": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+        "claims": { "type": "array", "items": { "$ref": "#/definitions/claim" } }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "status", "summaryClaims", "responsibilityClaims", "technologyClaims", "outcomeClaims", "collaborationBoundaries", "verificationLimits"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "enum": ["completed", "work-in-progress"] },
+        "summaryClaims": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/claim" } },
+        "responsibilityClaims": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/claim" } },
+        "technologyClaims": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/claim" } },
+        "outcomeClaims": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/claim" } },
+        "collaborationBoundaries": { "type": "array", "items": { "$ref": "#/definitions/claim" } },
+        "verificationLimits": { "type": "array", "items": { "$ref": "#/definitions/claim" } }
+      }
+    }
+  }
+}

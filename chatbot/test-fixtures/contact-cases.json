@@ -1,0 +1,109 @@
+[
+  {
+    "caseId": "contact-declined-consent",
+    "input": {
+      "consent": false,
+      "name": "Test Visitor",
+      "email": "visitor@example.com",
+      "message": "LOCAL TEST - declined consent",
+      "language": "en",
+      "sessionId": "local-contact-declined"
+    },
+    "expectedStatus": "invalid"
+  },
+  {
+    "caseId": "contact-missing-fields",
+    "input": {
+      "consent": true,
+      "email": "visitor@example.com",
+      "message": "LOCAL TEST - missing name",
+      "language": "en",
+      "sessionId": "local-contact-missing"
+    },
+    "expectedStatus": "invalid"
+  },
+  {
+    "caseId": "contact-invalid-email",
+    "input": {
+      "consent": true,
+      "name": "Test Visitor",
+      "email": "invalid-email",
+      "message": "LOCAL TEST - invalid email",
+      "language": "en",
+      "sessionId": "local-contact-invalid-email"
+    },
+    "expectedStatus": "invalid"
+  },
+  {
+    "caseId": "contact-valid-hebrew",
+    "input": {
+      "consent": true,
+      "name": "מבקר בדיקה",
+      "email": "hebrew.visitor@example.com",
+      "message": "LOCAL TEST - פנייה בעברית",
+      "language": "he",
+      "sessionId": "local-contact-hebrew"
+    },
+    "expectedStatus": "stored_and_notified"
+  },
+  {
+    "caseId": "contact-valid-english",
+    "input": {
+      "consent": true,
+      "name": "English Test Visitor",
+      "email": "english.visitor@example.com",
+      "message": "LOCAL TEST - English inquiry",
+      "language": "en",
+      "sessionId": "local-contact-english"
+    },
+    "expectedStatus": "stored_and_notified"
+  },
+  {
+    "caseId": "contact-duplicate",
+    "input": {
+      "consent": true,
+      "name": "Duplicate Test Visitor",
+      "email": "duplicate.visitor@example.com",
+      "message": "LOCAL TEST - duplicate inquiry",
+      "language": "en",
+      "sessionId": "local-contact-duplicate"
+    },
+    "expectedStatus": "duplicate"
+  },
+  {
+    "caseId": "contact-storage-failure",
+    "input": {
+      "consent": true,
+      "name": "Storage Test Visitor",
+      "email": "storage.visitor@example.com",
+      "message": "LOCAL TEST - storage failure",
+      "language": "en",
+      "sessionId": "local-contact-storage-failure"
+    },
+    "expectedStatus": "storage_failed"
+  },
+  {
+    "caseId": "contact-gmail-failure",
+    "input": {
+      "consent": true,
+      "name": "Gmail Failure Visitor",
+      "email": "gmail.failure@example.com",
+      "message": "LOCAL TEST - Gmail failure",
+      "language": "en",
+      "sessionId": "local-contact-gmail-failure"
+    },
+    "expectedStatus": "stored_notification_failed"
+  },
+  {
+    "caseId": "contact-gmail-unknown",
+    "input": {
+      "consent": true,
+      "name": "Gmail Unknown Visitor",
+      "email": "gmail.unknown@example.com",
+      "message": "LOCAL TEST - Gmail unknown",
+      "language": "en",
+      "sessionId": "local-contact-gmail-unknown"
+    },
+    "expectedStatus": "stored_notification_unknown"
+  }
+]

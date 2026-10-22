@@ -1,0 +1,612 @@
+{
+  "id": "87WlOR7gNj1u97O1",
+  "name": "Save Portfolio Lead",
+  "active": false,
+  "nodes": [
+    {
+      "id": "lead-trigger",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-620, 0],
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            { "name": "name", "type": "string" },
+            { "name": "email", "type": "string" },
+            { "name": "message", "type": "string" },
+            { "name": "sourceText", "type": "string" },
+            { "name": "language", "type": "string" },
+            { "name": "consent", "type": "boolean" },
+            { "name": "sessionId", "type": "string" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "normalize-validate",
+      "name": "Normalize and Validate Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-380, 0],
+      "parameters": {
+        "jsCode": "const envelope = $json ?? {};\nconst raw = envelope.query && typeof envelope.query === 'object' ? { ...envelope.query, sourceText: envelope.sourceText, sessionId: envelope.sessionId } : envelope;\nconst sourceText = typeof raw.sourceText === 'string' ? raw.sourceText.normalize('NFKC') : '';\nconst labeledFields = sourceText.match(/(?:שם|Name)\\s*:\\s*(.+?)\\s*;\\s*(?:אימייל|Email)\\s*:\\s*([^\\s;]+)\\s*;\\s*(?:הודעה|Message)\\s*:\\s*([\\s\\S]+?)\\s*$/i);\nconst name = labeledFields?.[1]?.trim() || (typeof raw.name === 'string' ? raw.name.trim() : '');\nconst email = (labeledFields?.[2]?.trim() || (typeof raw.email === 'string' ? raw.email.trim() : '')).toLowerCase();\nconst message = labeledFields?.[3]?.trim() || (typeof raw.message === 'string' ? raw.message.trim() : '');\nconst sourceTextLower = sourceText.toLowerCase();\nconst rawLanguage = typeof raw.language === 'string' ? raw.language.trim() : '';\nconst language = rawLanguage === 'he' ? 'he' : rawLanguage === 'en' ? 'en' : '';\nconst sessionId = typeof raw.sessionId === 'string' ? raw.sessionId.trim() : '';\nconst consent = raw.consent === true;\nconst emailIsValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) && email.length <= 254;\nconst nameIsValid = Boolean(name) && name.length <= 120;\nconst messageIsValid = Boolean(message) && message.length <= 4000;\nconst validationErrors = [];\nif (!consent) validationErrors.push('consent');\nif (!nameIsValid) validationErrors.push('name');\nif (!emailIsValid) validationErrors.push('email');\nif (!messageIsValid) validationErrors.push('message');\nif (nameIsValid && !sourceText.includes(name)) validationErrors.push('name_source');\nif (emailIsValid && !sourceTextLower.includes(email)) validationErrors.push('email_source');\nif (messageIsValid && !sourceText.includes(message)) validationErrors.push('message_source');\nif (!language) validationErrors.push('language');\nif (!sessionId || sessionId.length > 256) validationErrors.push('sessionId');\nconst valid = validationErrors.length === 0;\nconst requestMaterial = `${sessionId}\\n${email}\\n${message}`;\nreturn [{ json: { name, email, message, language, consent, sessionId, valid, validationErrors, requestMaterial } }];"
+      }
+    },
+    {
+      "id": "valid-lead",
+      "name": "Valid Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [-140, 0],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "lead-is-valid",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "invalid-result",
+      "name": "Invalid Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [120, 180],
+      "parameters": {
+        "jsCode": "const errors = Array.isArray($json.validationErrors) ? $json.validationErrors : [];\nconst hasSourceError = errors.some((error) => error.endsWith('_source'));\nconst language = $json.language === 'he' ? 'he' : 'en';\nconst collectionPrompt = language === 'he' ? 'נא לשלוח בהודעה אחת את השם, כתובת האימייל וההודעה שברצונך להעביר לדניאל.' : 'Please send your name, email address, and message together in one new message.';\nconst genericPrompt = language === 'he' ? 'לא ניתן לשמור את הפנייה. יש לוודא שניתנה הסכמה ושכל הפרטים תקינים.' : 'The inquiry could not be saved. Please confirm consent and check all details.';\nreturn [{ json: { requestId: 'invalid-request', status: 'invalid', stored: false, notificationAttempted: false, safeMessage: hasSourceError ? collectionPrompt : genericPrompt } }];"
+      }
+    },
+    {
+      "id": "request-id",
+      "name": "Generate Request ID",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [120, -80],
+      "parameters": {
+        "action": "hash",
+        "type": "SHA256",
+        "binaryData": false,
+        "value": "={{ $json.requestMaterial }}",
+        "dataPropertyName": "requestId",
+        "encoding": "hex"
+      }
+    },
+    {
+      "id": "simulation-mode",
+      "name": "Simulation Mode",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [360, -80],
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "simulation-outcome",
+              "name": "simulationOutcome",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "simulation-enabled",
+              "name": "simulationEnabled",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "simulation-adapter",
+      "name": "Simulation Adapter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, -80],
+      "parameters": {
+        "jsCode": "const outcome = ['success', 'failure', 'unknown'].includes($json.simulationOutcome) ? $json.simulationOutcome : 'unknown';\nconst statusByOutcome = { success: 'simulated_success', failure: 'simulated_failure', unknown: 'simulated_unknown' };\nconst safeMessageByLanguage = {\n  he: { success: 'הסימולציה הצליחה. לא נשמרה פנייה ולא נשלח אימייל.', failure: 'הסימולציה החזירה כשל. לא נשמרה פנייה ולא נשלח אימייל.', unknown: 'תוצאת הסימולציה אינה ידועה. לא נשמרה פנייה ולא נשלח אימייל.' },\n  en: { success: 'The simulation succeeded. No inquiry was saved and no email was sent.', failure: 'The simulation returned a failure. No inquiry was saved and no email was sent.', unknown: 'The simulation result is unknown. No inquiry was saved and no email was sent.' }\n};\nconst language = $json.language === 'he' ? 'he' : 'en';\nreturn [{ json: { requestId: $json.requestId, status: statusByOutcome[outcome], stored: false, notificationAttempted: false, simulated: true, safeMessage: safeMessageByLanguage[language][outcome] } }];"
+      }
+    },
+    {
+      "id": "simulation-enabled-check",
+      "name": "Simulation Enabled?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [600, -80],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "simulation-is-enabled",
+              "leftValue": "={{ $json.simulationEnabled }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "lookup-existing-lead",
+      "name": "Lookup Existing Lead",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [840, 80],
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "cachedResultName": "Portfolio Chatbot Leads"
+        },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Leads" },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "requestId",
+              "lookupValue": "={{ $json.requestId }}"
+            }
+          ]
+        },
+        "combineFilters": "AND",
+        "options": { "returnFirstMatch": true }
+      }
+    },
+    {
+      "id": "evaluate-lookup",
+      "name": "Evaluate Duplicate Lookup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 0],
+      "parameters": {
+        "jsCode": "const lead = $('Generate Request ID').first().json;\nconst duplicateFound = typeof $json.requestId === 'string' && $json.requestId === lead.requestId;\nreturn [{ json: { ...lead, duplicateFound } }];"
+      }
+    },
+    {
+      "id": "duplicate-lead-check",
+      "name": "Duplicate Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [1320, 0],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "duplicate-found",
+              "leftValue": "={{ $json.duplicateFound }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "duplicate-result",
+      "name": "Duplicate Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, -100],
+      "parameters": {
+        "jsCode": "const lead = typeof $ === 'function' ? $('Generate Request ID').first().json : $json;\nconst safeMessage = lead.language === 'he' ? 'הפנייה הזו כבר נשמרה.' : 'This inquiry has already been saved.';\nreturn [{ json: { requestId: lead.requestId, status: 'duplicate', stored: true, notificationAttempted: false, safeMessage } }];"
+      }
+    },
+    {
+      "id": "append-lead",
+      "name": "Append Lead",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1560, 100],
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "cachedResultName": "Portfolio Chatbot Leads"
+        },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Leads" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "createdAt": "={{ $now.toISO() }}",
+            "language": "={{ $json.language }}",
+            "name": "={{ $json.name }}",
+            "email": "={{ $json.email }}",
+            "message": "={{ $json.message }}",
+            "consent": "={{ $json.consent }}",
+            "requestId": "={{ $json.requestId }}",
+            "emailStatus": "not_attempted"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "confirm-append-outcome",
+      "name": "Confirm Append Outcome",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1800, 200],
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "cachedResultName": "Portfolio Chatbot Leads"
+        },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Leads" },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "requestId",
+              "lookupValue": "={{ $('Generate Request ID').first().json.requestId }}"
+            }
+          ]
+        },
+        "combineFilters": "AND",
+        "options": { "returnFirstMatch": true }
+      }
+    },
+    {
+      "id": "evaluate-append-confirmation",
+      "name": "Evaluate Append Confirmation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2040, 200],
+      "parameters": {
+        "jsCode": "const lead = $('Generate Request ID').first().json;\nconst rowNumber = Number($json.row_number);\nconst appendConfirmed = typeof $json.requestId === 'string' && $json.requestId === lead.requestId && Number.isInteger(rowNumber) && rowNumber > 1;\nreturn [{ json: { ...lead, row_number: rowNumber, appendConfirmed } }];"
+      }
+    },
+    {
+      "id": "append-confirmed-check",
+      "name": "Append Confirmed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [2280, 200],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "append-was-confirmed",
+              "leftValue": "={{ $json.appendConfirmed }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "storage-confirmed",
+      "name": "Storage Confirmed",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2520, 80],
+      "parameters": {
+        "jsCode": "const lead = $json ?? {};\nreturn [{ json: { ...lead, storageConfirmed: true, emailStatus: 'not_attempted' } }];"
+      }
+    },
+    {
+      "id": "storage-failed-result",
+      "name": "Storage Failed Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2520, 320],
+      "parameters": {
+        "jsCode": "const lead = typeof $ === 'function' ? $('Generate Request ID').first().json : $json;\nconst requestId = typeof lead.requestId === 'string' ? lead.requestId : 'storage-failed';\nconst safeMessage = lead.language === 'he' ? 'לא ניתן לשמור את הפנייה כרגע. אפשר לנסות שוב מאוחר יותר.' : 'The inquiry could not be saved right now. Please try again later.';\nreturn [{ json: { requestId, status: 'storage_failed', stored: false, notificationAttempted: false, safeMessage } }];"
+      }
+    },
+    {
+      "id": "send-gmail",
+      "name": "Send Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [2760, 80],
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "danielbedrack@gmail.com",
+        "subject": "={{ 'Portfolio chatbot inquiry - ' + $('Storage Confirmed').first().json.name }}",
+        "emailType": "text",
+        "message": "={{ 'Name: ' + $('Storage Confirmed').first().json.name + '\\nEmail: ' + $('Storage Confirmed').first().json.email + '\\nMessage: ' + $('Storage Confirmed').first().json.message + '\\nLanguage: ' + $('Storage Confirmed').first().json.language + '\\nRequest ID: ' + $('Storage Confirmed').first().json.requestId }}",
+        "options": { "appendAttribution": false }
+      }
+    },
+    {
+      "id": "gmail-sent-outcome",
+      "name": "Gmail Sent Outcome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3000, 0],
+      "parameters": {
+        "jsCode": "const lead = $('Storage Confirmed').first().json;\nreturn [{ json: { ...lead, emailStatus: 'sent' } }];"
+      }
+    },
+    {
+      "id": "classify-gmail-error",
+      "name": "Classify Gmail Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3000, 160],
+      "parameters": {
+        "jsCode": "const lead = $('Storage Confirmed').first().json;\nconst errorText = JSON.stringify($json ?? {}).toLowerCase();\nconst uncertainTransportFailure = ['timeout', 'timed out', 'etimedout', 'econnreset', 'socket hang up', 'network'].some((marker) => errorText.includes(marker));\nreturn [{ json: { ...lead, emailStatus: uncertainTransportFailure ? 'unknown' : 'failed' } }];"
+      }
+    },
+    {
+      "id": "gmail-outcome-unknown-check",
+      "name": "Gmail Outcome Unknown?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [3240, 160],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "gmail-status-unknown",
+              "leftValue": "={{ $json.emailStatus }}",
+              "rightValue": "unknown",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "gmail-unknown-outcome",
+      "name": "Gmail Unknown Outcome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3480, 100],
+      "parameters": {
+        "jsCode": "return [{ json: { ...$json, emailStatus: 'unknown' } }];"
+      }
+    },
+    {
+      "id": "gmail-failed-outcome",
+      "name": "Gmail Failed Outcome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3480, 220],
+      "parameters": {
+        "jsCode": "return [{ json: { ...$json, emailStatus: 'failed' } }];"
+      }
+    },
+    {
+      "id": "update-email-status",
+      "name": "Update Email Status",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [3720, 80],
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "sheet",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "cachedResultName": "Portfolio Chatbot Leads"
+        },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Leads" },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": ["row_number"],
+          "schema": []
+        },
+        "options": { "handlingExtraData": "ignoreIt" }
+      }
+    },
+    {
+      "id": "notification-result",
+      "name": "Notification Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3960, 20],
+      "parameters": {
+        "jsCode": "let outcome = $json ?? {};\nif (!outcome.requestId || !['sent', 'failed', 'unknown'].includes(outcome.emailStatus)) {\n  for (const nodeName of ['Gmail Sent Outcome', 'Gmail Unknown Outcome', 'Gmail Failed Outcome']) {\n    const nodeOutput = $(nodeName);\n    if (nodeOutput.isExecuted) {\n      const candidate = nodeOutput.first().json;\n      if (candidate?.requestId && ['sent', 'failed', 'unknown'].includes(candidate.emailStatus)) {\n        outcome = candidate;\n        break;\n      }\n    }\n  }\n}\nconst emailStatus = ['sent', 'failed', 'unknown'].includes(outcome.emailStatus) ? outcome.emailStatus : 'unknown';\nconst statusByEmail = { sent: 'stored_and_notified', failed: 'stored_notification_failed', unknown: 'stored_notification_unknown' };\nconst language = outcome.language === 'he' ? 'he' : 'en';\nconst messages = {\n  he: { sent: 'הפנייה נשמרה ונשלחה לדניאל.', failed: 'הפנייה נשמרה, אך הודעת המייל לא נשלחה.', unknown: 'הפנייה נשמרה, אך מצב שליחת המייל אינו ידוע.' },\n  en: { sent: 'Your inquiry was saved and sent to Daniel.', failed: 'Your inquiry was saved, but the email notification failed.', unknown: 'Your inquiry was saved, but the email notification status is unknown.' }\n};\nreturn [{ json: { requestId: outcome.requestId, status: statusByEmail[emailStatus], stored: true, notificationAttempted: true, safeMessage: messages[language][emailStatus] } }];"
+      }
+    },
+    {
+      "id": "status-update-failed-result",
+      "name": "Status Update Failed Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3960, 160],
+      "parameters": {
+        "jsCode": "const lead = $('Storage Confirmed').first().json;\nconst safeMessage = lead.language === 'he' ? 'הפנייה נשמרה, אך מצב שליחת המייל אינו ידוע.' : 'Your inquiry was saved, but the email notification status is unknown.';\nreturn [{ json: { requestId: lead.requestId, status: 'stored_notification_unknown', stored: true, notificationAttempted: true, safeMessage } }];"
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [{ "node": "Normalize and Validate Lead", "type": "main", "index": 0 }]
+      ]
+    },
+    "Normalize and Validate Lead": {
+      "main": [[{ "node": "Valid Lead?", "type": "main", "index": 0 }]]
+    },
+    "Valid Lead?": {
+      "main": [
+        [{ "node": "Generate Request ID", "type": "main", "index": 0 }],
+        [{ "node": "Invalid Result", "type": "main", "index": 0 }]
+      ]
+    },
+    "Generate Request ID": {
+      "main": [[{ "node": "Simulation Mode", "type": "main", "index": 0 }]]
+    },
+    "Simulation Mode": {
+      "main": [[{ "node": "Simulation Enabled?", "type": "main", "index": 0 }]]
+    },
+    "Simulation Enabled?": {
+      "main": [
+        [{ "node": "Simulation Adapter", "type": "main", "index": 0 }],
+        [{ "node": "Lookup Existing Lead", "type": "main", "index": 0 }]
+      ]
+    },
+    "Lookup Existing Lead": {
+      "main": [
+        [{ "node": "Evaluate Duplicate Lookup", "type": "main", "index": 0 }],
+        [{ "node": "Storage Failed Result", "type": "main", "index": 0 }]
+      ]
+    },
+    "Evaluate Duplicate Lookup": {
+      "main": [[{ "node": "Duplicate Lead?", "type": "main", "index": 0 }]]
+    },
+    "Duplicate Lead?": {
+      "main": [
+        [{ "node": "Duplicate Result", "type": "main", "index": 0 }],
+        [{ "node": "Append Lead", "type": "main", "index": 0 }]
+      ]
+    },
+    "Append Lead": {
+      "main": [
+        [{ "node": "Confirm Append Outcome", "type": "main", "index": 0 }],
+        [{ "node": "Confirm Append Outcome", "type": "main", "index": 0 }]
+      ]
+    },
+    "Confirm Append Outcome": {
+      "main": [
+        [
+          { "node": "Evaluate Append Confirmation", "type": "main", "index": 0 }
+        ],
+        [{ "node": "Storage Failed Result", "type": "main", "index": 0 }]
+      ]
+    },
+    "Evaluate Append Confirmation": {
+      "main": [[{ "node": "Append Confirmed?", "type": "main", "index": 0 }]]
+    },
+    "Append Confirmed?": {
+      "main": [
+        [{ "node": "Storage Confirmed", "type": "main", "index": 0 }],
+        [{ "node": "Storage Failed Result", "type": "main", "index": 0 }]
+      ]
+    },
+    "Storage Confirmed": {
+      "main": [[{ "node": "Send Gmail", "type": "main", "index": 0 }]]
+    },
+    "Send Gmail": {
+      "main": [
+        [{ "node": "Gmail Sent Outcome", "type": "main", "index": 0 }],
+        [{ "node": "Classify Gmail Error", "type": "main", "index": 0 }]
+      ]
+    },
+    "Gmail Sent Outcome": {
+      "main": [[{ "node": "Update Email Status", "type": "main", "index": 0 }]]
+    },
+    "Classify Gmail Error": {
+      "main": [
+        [{ "node": "Gmail Outcome Unknown?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Gmail Outcome Unknown?": {
+      "main": [
+        [{ "node": "Gmail Unknown Outcome", "type": "main", "index": 0 }],
+        [{ "node": "Gmail Failed Outcome", "type": "main", "index": 0 }]
+      ]
+    },
+    "Gmail Unknown Outcome": {
+      "main": [[{ "node": "Update Email Status", "type": "main", "index": 0 }]]
+    },
+    "Gmail Failed Outcome": {
+      "main": [[{ "node": "Update Email Status", "type": "main", "index": 0 }]]
+    },
+    "Update Email Status": {
+      "main": [
+        [{ "node": "Notification Result", "type": "main", "index": 0 }],
+        [{ "node": "Status Update Failed Result", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": []
+}

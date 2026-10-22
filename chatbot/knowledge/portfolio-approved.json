@@ -1,0 +1,268 @@
+{
+  "version": "1.0.0",
+  "profileClaims": [
+    {
+      "sourceId": "profile.title",
+      "text": "Daniel Bedrack is an AI and Automation Developer and Technical Project Manager.",
+      "verification": "approved"
+    },
+    {
+      "sourceId": "profile.value",
+      "text": "He turns complex business processes into reliable automation systems by combining hands-on development with end-to-end technical project management.",
+      "verification": "approved"
+    },
+    {
+      "sourceId": "profile.availability",
+      "text": "Daniel is based in Israel and is open to full-time opportunities.",
+      "verification": "approved"
+    }
+  ],
+  "experience": [
+    {
+      "sourceId": "experience.optimate",
+      "company": "Optimate",
+      "role": "Automation Developer and Technical Project Manager",
+      "startDate": "2025-03",
+      "endDate": "2026-09",
+      "claims": [
+        {
+          "sourceId": "experience.optimate.period",
+          "text": "Daniel worked at Optimate from March 2025 through September 2026; this is previous, not current, employment.",
+          "verification": "approved"
+        }
+      ]
+    },
+    {
+      "sourceId": "experience.tesla",
+      "company": "Tesla",
+      "role": "Delivery Advisor",
+      "startDate": "2024-02",
+      "endDate": "2025-03",
+      "claims": [
+        {
+          "sourceId": "experience.tesla.period",
+          "text": "Daniel worked as a Delivery Advisor at Tesla from February 2024 through March 2025.",
+          "verification": "approved"
+        }
+      ]
+    },
+    {
+      "sourceId": "experience.sela",
+      "company": "Sela College",
+      "role": "Coding Support and Assignment Reviewer",
+      "startDate": "2023-03",
+      "endDate": "2024-02",
+      "claims": [
+        {
+          "sourceId": "experience.sela.period",
+          "text": "Daniel provided coding support and reviewed assignments at Sela College from March 2023 through February 2024.",
+          "verification": "approved"
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "sourceId": "skills.automation",
+      "text": "Business-process automation, systems integration, workflow design, testing, implementation and operational support.",
+      "verification": "approved"
+    },
+    {
+      "sourceId": "skills.platforms",
+      "text": "Hands-on work with Make.com, Fireberry CRM, monday.com, Gmail, Priority, VoiceCenter and ManyChat.",
+      "verification": "approved"
+    },
+    {
+      "sourceId": "skills.ai",
+      "text": "Applied AI experience includes document classification, structured information extraction, OCR workflows and AI-assisted software development.",
+      "verification": "approved"
+    },
+    {
+      "sourceId": "skills.development",
+      "text": "Software-development foundations include React, React Native, Expo, TypeScript, Firebase and web application delivery.",
+      "verification": "approved"
+    }
+  ],
+  "projects": {
+    "megureit": {
+      "id": "megureit",
+      "title": "Integrated CRM Ecosystem for Megureit",
+      "status": "completed",
+      "summaryClaims": [
+        {
+          "sourceId": "megureit.scope",
+          "text": "The project created an integrated operational ecosystem for apartment-interest leads, customers, apartments, contracts and cross-department workflows at the real-estate company Megureit.",
+          "verification": "approved"
+        },
+        {
+          "sourceId": "megureit.challenge",
+          "text": "The primary challenge was maintaining reliable Fireberry-Priority synchronization while live data continued to grow and change.",
+          "verification": "firsthand"
+        }
+      ],
+      "responsibilityClaims": [
+        {
+          "sourceId": "megureit.responsibility",
+          "text": "Daniel led discovery, process characterization, CRM design and configuration, integrations, testing, training, implementation and ongoing support.",
+          "verification": "firsthand"
+        },
+        {
+          "sourceId": "megureit.reliability",
+          "text": "Reliability techniques included unique identifiers, duplicate prevention, bidirectional updates, logging, error handling and retry mechanisms.",
+          "verification": "firsthand"
+        }
+      ],
+      "technologyClaims": [
+        {
+          "sourceId": "megureit.technology",
+          "text": "The system used Fireberry CRM, Priority, VoiceCenter, ManyChat, Make.com and iframe screens that improved usability.",
+          "verification": "approved"
+        }
+      ],
+      "outcomeClaims": [
+        {
+          "sourceId": "megureit.outcomes",
+          "text": "The project centralized information, reduced duplicate entry and operational errors, improved tracking and created a shared operational view.",
+          "verification": "firsthand"
+        }
+      ],
+      "collaborationBoundaries": [
+        {
+          "sourceId": "megureit.collaboration",
+          "text": "One additional developer assisted with Fireberry-Priority synchronization and iframe screens; Daniel's ownership must not erase that contribution.",
+          "verification": "approved"
+        }
+      ],
+      "verificationLimits": [
+        {
+          "sourceId": "megureit.limit.metrics",
+          "text": "No exact outcome metrics are approved; outcomes must remain qualitative unless later evidence is supplied.",
+          "verification": "unverified-limit"
+        },
+        {
+          "sourceId": "megureit.limit.private",
+          "text": "The repository is private, and no credentials, customer data or private implementation artifacts may be disclosed.",
+          "verification": "unverified-limit"
+        }
+      ]
+    },
+    "financialDocumentAutomation": {
+      "id": "financial-document-automation",
+      "title": "AI-Powered Financial Document Processing for a Solar Energy Company",
+      "status": "completed",
+      "summaryClaims": [
+        {
+          "sourceId": "financial.scope",
+          "text": "The workflow replaced manual Gmail searching and attachment organization with OCR and AI classification, extraction and structured monday.com items for human review and approval.",
+          "verification": "firsthand"
+        }
+      ],
+      "responsibilityClaims": [
+        {
+          "sourceId": "financial.responsibility",
+          "text": "Daniel owned business analysis, solution design, development, testing, delivery and deployment.",
+          "verification": "firsthand"
+        },
+        {
+          "sourceId": "financial.quality",
+          "text": "He addressed inaccurate extraction through prompt refinement and required-field validation.",
+          "verification": "firsthand"
+        }
+      ],
+      "technologyClaims": [
+        {
+          "sourceId": "financial.technology",
+          "text": "Approved technologies are Make.com, Gmail, monday.com, OpenAI and OCR.",
+          "verification": "approved"
+        }
+      ],
+      "outcomeClaims": [
+        {
+          "sourceId": "financial.outcome",
+          "text": "The employee's task changed from manual inbox organization to reviewing structured records and approving consequential actions.",
+          "verification": "firsthand"
+        }
+      ],
+      "collaborationBoundaries": [],
+      "verificationLimits": [
+        {
+          "sourceId": "financial.limit.client",
+          "text": "The solar-energy client name is confidential.",
+          "verification": "unverified-limit"
+        },
+        {
+          "sourceId": "financial.limit.ocr-provider",
+          "text": "Google Cloud Vision is only a probable OCR provider and must not be stated as fact until Daniel verifies it.",
+          "verification": "unverified-limit"
+        },
+        {
+          "sourceId": "financial.limit.metrics",
+          "text": "No time-saving or document-volume metric is approved.",
+          "verification": "unverified-limit"
+        }
+      ]
+    },
+    "remindme": {
+      "id": "remindme",
+      "title": "RemindMe - Location-Aware Shopping Assistant",
+      "status": "work-in-progress",
+      "summaryClaims": [
+        {
+          "sourceId": "remindme.scope",
+          "text": "RemindMe helps people remember small purchases by associating shopping items with store categories and notifying them near relevant stores, optionally while moving toward home.",
+          "verification": "work-in-progress"
+        }
+      ],
+      "responsibilityClaims": [
+        {
+          "sourceId": "remindme.voice",
+          "text": "Daniel designed an adaptive speech-processing layer with multi-item parsing, quantities and units, a personal correction dictionary and a local Whisper Tiny fallback.",
+          "verification": "repository-verified"
+        },
+        {
+          "sourceId": "remindme.speech-boundary",
+          "text": "Daniel did not train a speech-recognition model; he built a processing layer around limitations in free speech-recognition services and tested it with his own Hebrew speech.",
+          "verification": "firsthand"
+        }
+      ],
+      "technologyClaims": [
+        {
+          "sourceId": "remindme.technology",
+          "text": "The application uses Expo, React Native, web support, Firebase Authentication, Firestore and OpenStreetMap-based location discovery.",
+          "verification": "repository-verified"
+        },
+        {
+          "sourceId": "remindme.capabilities",
+          "text": "Repository-supported capabilities include configurable notification radius, GPS-noise rejection, list, map, history and profile views, English, Hebrew and Spanish localization, and RTL support.",
+          "verification": "repository-verified"
+        }
+      ],
+      "outcomeClaims": [
+        {
+          "sourceId": "remindme.verification",
+          "text": "On 18 October 2026, 27 automated tests, TypeScript checking and the web production export passed, and the public demo returned HTTP 200.",
+          "verification": "repository-verified"
+        }
+      ],
+      "collaborationBoundaries": [
+        {
+          "sourceId": "remindme.authorship",
+          "text": "Daniel designed and developed RemindMe independently using an AI-assisted development workflow with OpenAI Codex.",
+          "verification": "approved"
+        }
+      ],
+      "verificationLimits": [
+        {
+          "sourceId": "remindme.limit.mobile",
+          "text": "Reliable background notifications have not been verified on a real Android or iPhone device.",
+          "verification": "unverified-limit"
+        },
+        {
+          "sourceId": "remindme.limit.native-config",
+          "text": "Final native identifiers and mobile authentication configuration are not verified as completed.",
+          "verification": "unverified-limit"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "portfolio-chatbot-local",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check:config": "node --test tests/config.test.mjs",
+    "check:environment": "node scripts/check-environment.mjs",
+    "validate:knowledge": "node scripts/validate-knowledge.mjs",
+    "validate:workflows": "node scripts/validate-workflows.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
+  }
+}
