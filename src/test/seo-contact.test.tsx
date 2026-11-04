@@ -16,7 +16,7 @@ describe('route metadata', () => {
     expect(new Set(metadata.map(({ description }) => description))).toHaveLength(routes.length)
     expect(metadata.map(({ canonicalPath }) => canonicalPath)).toEqual([
       '/Portfolio/',
-      '/Portfolio/projects/megureit',
+      '/Portfolio/projects/real-estate-company',
       '/Portfolio/projects/financial-document-automation',
       '/Portfolio/projects/remindme',
     ])
@@ -30,7 +30,7 @@ describe('route metadata', () => {
   })
 
   it('writes description, canonical, Open Graph and Person JSON-LD', async () => {
-    const meta = getRouteMeta('/projects/megureit')
+    const meta = getRouteMeta('/projects/real-estate-company')
     render(<Seo meta={meta} />)
 
     await waitFor(() => expect(document.title).toBe(meta.title))

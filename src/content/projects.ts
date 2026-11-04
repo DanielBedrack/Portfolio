@@ -2,10 +2,10 @@ import type { Project } from './types'
 
 export const projects: readonly Project[] = [
   {
-    slug: 'megureit',
-    title: 'Integrated CRM Ecosystem for Megureit',
-    shortTitle: 'Megureit CRM Ecosystem',
-    clientDisplayName: 'Real-estate company',
+    slug: 'real-estate-company',
+    title: 'Integrated CRM Ecosystem for a Real-Estate Company',
+    shortTitle: 'Real-Estate Company CRM Ecosystem',
+    clientDisplayName: 'Real-Estate Company',
     status: 'completed',
     summary:
       'A scalable, role-aware CRM ecosystem for apartment interest, customers, properties, contracts and management reporting.',

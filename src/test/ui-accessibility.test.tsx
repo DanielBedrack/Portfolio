@@ -28,7 +28,7 @@ describe('UI primitives', () => {
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
     expect(
       screen.getByRole('link', { name: `Read case study: ${projects[0].title}` }),
-    ).toHaveAttribute('href', '/projects/megureit')
+    ).toHaveAttribute('href', '/projects/real-estate-company')
   })
 
   it('retains the requested heading level', () => {

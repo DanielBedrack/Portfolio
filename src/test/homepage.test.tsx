@@ -26,7 +26,7 @@ describe('work-first homepage', () => {
     expect(screen.getByRole('link', { name: 'View My Work' })).toHaveAttribute('href', '#work')
   })
 
-  it('renders the three projects in order and gives Megureit priority', () => {
+  it('renders the three projects in order and gives the real-estate case study priority', () => {
     render(
       <MemoryRouter>
         <HomePage />
@@ -37,7 +37,7 @@ describe('work-first homepage', () => {
     const cards = within(work).getAllByRole('article')
 
     expect(cards).toHaveLength(3)
-    expect(within(cards[0]).getByRole('heading')).toHaveTextContent('Megureit')
+    expect(within(cards[0]).getByRole('heading')).toHaveTextContent('Real-Estate Company')
     expect(cards[0]).toHaveAttribute('data-featured', 'true')
     expect(within(cards[1]).getByRole('heading')).toHaveTextContent('Solar Energy Company')
     expect(within(cards[2]).getByRole('heading')).toHaveTextContent('RemindMe')

@@ -6,17 +6,20 @@ import { validatePortfolioContent } from '../content/validateContent'
 describe('portfolio content contract', () => {
   it('publishes exactly the three approved projects in priority order', () => {
     expect(projects.map(({ slug }) => slug)).toEqual([
-      'megureit',
+      'real-estate-company',
       'financial-document-automation',
       'remindme',
     ])
   })
 
-  it('presents Megureit as a scalable, role-aware real-estate CRM ecosystem', () => {
-    const project = getProjectBySlug('megureit')
+  it('presents the client anonymously as a scalable, role-aware real-estate CRM ecosystem', () => {
+    const project = getProjectBySlug('real-estate-company')
     const publishedCopy = JSON.stringify(project)
 
-    expect(project?.clientDisplayName).toBe('Real-estate company')
+    expect(project?.title).toBe('Integrated CRM Ecosystem for a Real-Estate Company')
+    expect(project?.shortTitle).toBe('Real-Estate Company CRM Ecosystem')
+    expect(project?.clientDisplayName).toBe('Real-Estate Company')
+    expect(publishedCopy).not.toMatch(/Megureit/i)
     expect(project?.collaboration).toContain('One additional developer')
     expect(project?.collaboration).toContain('Fireberry-Priority synchronization')
     expect(project?.collaboration).toContain('iframe')

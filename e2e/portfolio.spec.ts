@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 const projects = [
-  ['megureit', 'Integrated CRM Ecosystem for Megureit'],
+  ['real-estate-company', 'Integrated CRM Ecosystem for a Real-Estate Company'],
   ['financial-document-automation', 'Cross-Department Operations System for a Solar Energy Company'],
   ['remindme', 'RemindMe — Location-Aware Shopping Assistant'],
 ] as const
@@ -48,6 +48,17 @@ test('direct GitHub Pages route restores RemindMe', async ({ page }) => {
     page.getByRole('heading', { level: 1, name: 'RemindMe — Location-Aware Shopping Assistant' }),
   ).toBeVisible()
   await expect(page.getByText('Work in Progress')).toBeVisible()
+})
+
+test('the previous Megureit route redirects to the anonymous case-study URL', async ({ page }) => {
+  await page.goto('./projects/megureit')
+  await expect(page).toHaveURL(/\/Portfolio\/projects\/real-estate-company$/)
+  await expect(
+    page.getByRole('heading', {
+      level: 1,
+      name: 'Integrated CRM Ecosystem for a Real-Estate Company',
+    }),
+  ).toBeVisible()
 })
 
 test('unknown routes render the custom 404', async ({ page }) => {
