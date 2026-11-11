@@ -6,3 +6,8 @@ playwright-report/
 test-results/
 *.tsbuildinfo
 tmp/
+.env
+**/.env
+!**/.env.example
+chatbot/ngrok.yml
+chatbot/.ngrok2/

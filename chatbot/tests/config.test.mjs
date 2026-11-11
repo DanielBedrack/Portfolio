@@ -35,17 +35,30 @@ test('mounts workflows and knowledge read only', async () => {
   assert.match(compose, /\.\/knowledge:\/workspace\/knowledge:ro\b/);
 });
 
-test('does not declare secrets', async () => {
+test('uses placeholder-only secret fields', async () => {
   const [compose, envExample] = await Promise.all([
     readText('compose.yaml'),
     readText('.env.example'),
   ]);
-  const assignments = `${compose}\n${envExample}`
-    .split(/\r?\n/u)
-    .map((line) => line.trim())
-    .filter((line) => /password|token|secret|credential/iu.test(line));
+  assert.match(envExample, /^NGROK_AUTHTOKEN=replace_with_local_token$/m);
+  assert.match(envExample, /^NGROK_DOMAIN=replace_with_free_static_domain$/m);
+  assert.doesNotMatch(`${compose}\n${envExample}`, /\b2[a-z0-9_-]{24,}\b/iu);
+});
 
-  assert.deepEqual(assignments, []);
+test('isolates n8n and the gateway while exposing only the gateway through ngrok', async () => {
+  const compose = await readText('compose.yaml');
+  assert.match(compose, /127\.0\.0\.1:\$\{N8N_PORT:-5678\}:5678/);
+  assert.match(compose, /portfolio-gateway:[\s\S]*?restart:\s*unless-stopped/);
+  assert.match(compose, /ngrok:[\s\S]*?restart:\s*unless-stopped/);
+  assert.match(compose, /--domain=\$\{NGROK_DOMAIN\}/);
+  assert.match(compose, /portfolio-gateway:8080/);
+  assert.match(compose, /fetch\('http:\/\/localhost:8080\/health'\)/);
+  assert.match(compose, /EXECUTIONS_DATA_SAVE_ON_SUCCESS:\s*["']?none["']?/);
+
+  const gatewaySection = compose.split(/^\s{2}portfolio-gateway:\s*$/m)[1]?.split(/^\s{2}\S/m)[0] ?? '';
+  assert.doesNotMatch(gatewaySection, /^\s+ports:/m);
+  assert.doesNotMatch(compose, /^\s{2}ollama:/m);
+  assert.doesNotMatch(compose, /11434:11434/);
 });
 
 test('reports healthy n8n and Ollama with installed models', async () => {

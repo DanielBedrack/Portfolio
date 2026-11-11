@@ -498,65 +498,37 @@ test("portfolio chat export pins local Ollama and the approved grounding rules",
   assert.match(serialized, /Do not provide exact performance or outcome metrics because none are approved\./);
   assert.match(serialized, /latest visitor message/i);
   assert.match(serialized, /untrusted data/i);
-  assert.match(serialized, /sessionId/);
   assert.doesNotMatch(serialized, /currently works at Optimate/i);
 });
 
-test("portfolio chat exposes only one consent-gated lead subworkflow tool", async () => {
+test("portfolio chat exposes no lead, Sheets or Gmail tool", async () => {
   const workflow = await readJson("workflows/portfolio-chat.json");
   const toolNodes = workflow.nodes.filter((node) =>
     workflow.connections[node.name]?.ai_tool?.flat().some(({ node: target }) => target === "AI Agent"),
   );
 
-  assert.equal(toolNodes.length, 1);
-  const [leadTool] = toolNodes;
-  assert.equal(leadTool.type, "@n8n/n8n-nodes-langchain.toolWorkflow");
-  assert.equal(leadTool.typeVersion, 2.2);
-  assert.equal(leadTool.name, "save_portfolio_lead");
-  assert.ok(!leadTool.parameters.source || leadTool.parameters.source === "database");
-  assert.deepEqual(
-    leadTool.parameters.workflowInputs.schema.map(({ id }) => id),
-    ["name", "email", "message", "sourceText", "language", "consent", "sessionId"],
-  );
-  assert.equal(
-    leadTool.parameters.workflowInputs.value.sourceText,
-    "={{ $('When chat message received').item.json.chatInput }}",
-  );
-  assert.equal(
-    leadTool.parameters.workflowInputs.value.sessionId,
-    "={{ $('When chat message received').item.json.sessionId }}",
-  );
+  assert.equal(toolNodes.length, 0);
+  assert.equal(workflow.nodes.some((node) => node.name === "save_portfolio_lead"), false);
   assert.ok(workflow.nodes.every((node) => ![
     "n8n-nodes-base.googleSheetsTool",
     "n8n-nodes-base.gmailTool",
   ].includes(node.type)));
 });
 
-test("inactive portfolio chat calls the published simulation subworkflow by ID", async () => {
+test("inactive portfolio chat preserves its stable chat webhook without a subworkflow", async () => {
   const workflow = await readJson("workflows/portfolio-chat.json");
-  const leadTool = nodeByName(workflow, "save_portfolio_lead");
-
-  assert.ok(!leadTool.parameters.source || leadTool.parameters.source === "database");
-  assert.equal(leadTool.parameters.workflowId.value, "87WlOR7gNj1u97O1");
-  assert.equal(leadTool.parameters.workflowJson, undefined);
+  assert.equal(workflow.active, false);
+  assert.equal(nodeByName(workflow, "When chat message received").webhookId, "94c404d3-766e-4a0b-906c-517ad0b0815a");
+  assert.ok(workflow.nodes.every((node) => node.type !== "@n8n/n8n-nodes-langchain.toolWorkflow"));
 });
 
-test("portfolio chat prompt gates personal data and maps every lead result honestly", async () => {
+test("portfolio chat prompt refuses personal-data collection and offers mail only", async () => {
   const workflow = await readJson("workflows/portfolio-chat.json");
   const agent = nodeByName(workflow, "AI Agent");
   const prompt = agent.parameters.options.systemMessage;
 
-  assert.match(prompt, /private Google Sheet/i);
-  assert.match(prompt, /Google.*פרטי/u);
-  assert.match(prompt, /before asking for.*name.*email.*message/is);
-  assert.match(prompt, /stored_and_notified/);
-  assert.match(prompt, /stored_notification_failed/);
-  assert.match(prompt, /stored_notification_unknown/);
-  assert.match(prompt, /simulated_success/);
-  assert.match(prompt, /simulated_failure/);
-  assert.match(prompt, /simulated_unknown/);
-  assert.match(prompt, /duplicate/);
-  assert.match(prompt, /invalid/);
-  assert.match(prompt, /storage_failed/);
+  assert.match(prompt, /Do not ask for or collect.*name.*email address.*message/is);
+  assert.match(prompt, /mailto:danielbedrack@gmail\.com\?subject=Portfolio%20inquiry/i);
   assert.match(prompt, /visitor.*message.*untrusted data/is);
+  assert.doesNotMatch(prompt, /Google Sheet|save_portfolio_lead|stored_and_notified/iu);
 });
