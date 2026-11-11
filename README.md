@@ -68,6 +68,16 @@ npm run test:e2e -- e2e/chatbot.spec.ts
 
 GitHub Pages remains unchanged until Daniel separately approves enabling the build flag in a deployment. Building or testing the widget locally does not publish it.
 
+## Optional local AI mode
+
+The chatbot can optionally try Daniel's local Ollama/n8n stack through a narrow gateway and automatically fall back to the browser-only engine. The gateway exposes only health and chat routes, applies per-IP limits, saves no successful n8n execution payloads, and never exposes the n8n editor or Ollama directly.
+
+This mode uses no paid AI API. It is designed for ngrok's limited Free plan; current quotas and terms must be rechecked before publication. When the computer or any local service is off—or the free quota is unavailable—visitors still receive the static portfolio answer.
+
+Setup, privacy limits, shutdown behavior, and the manual security checklist are documented in [chatbot/docs/hybrid-local-setup.md](chatbot/docs/hybrid-local-setup.md). The tracked workflow remains inactive, the widget remains disabled in the default build, no real ngrok value is stored in Git, and GitHub Pages remains unchanged.
+
+Offline verification recorded on 2026-11-11: the repository gate passed 77 Vitest tests plus typecheck, lint, content, resume, and production build; the static Playwright suite passed 25 tests with one intentional desktop skip; the fake-gateway hybrid suite passed 14 tests across desktop and mobile; the chatbot package passed 55 tests; the gateway passed 15 tests and built as a non-root Docker image. Live ngrok, live n8n activation, and live Ollama-through-ngrok verification have **not** been run and require Daniel's ignored local values and separate approval.
+
 ## Editing content
 
 - Professional profile and experience: `src/content/profile.ts`

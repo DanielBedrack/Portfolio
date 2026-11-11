@@ -78,6 +78,10 @@ test('exposes only health and chat with exact CORS and safe methods', async () =
     assert.equal(preflight.status, 204)
     assert.equal(preflight.headers.get('access-control-allow-origin'), 'https://danielbedrack.github.io')
     assert.equal(preflight.headers.get('vary'), 'Origin')
+    assert.equal(
+      preflight.headers.get('access-control-allow-headers'),
+      'content-type, ngrok-skip-browser-warning',
+    )
 
     const valid = await fetch(new URL('/chat', baseUrl), {
       method: 'POST',

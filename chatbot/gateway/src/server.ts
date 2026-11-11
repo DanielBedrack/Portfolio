@@ -141,7 +141,13 @@ export function createGatewayServer(options: GatewayServerOptions): http.Server 
         finish(405)
         return
       }
-      const healthy = await options.n8nClient.health()
+      const controller = new AbortController()
+      request.once('aborted', () => controller.abort())
+      response.once('close', () => {
+        if (!response.writableEnded) controller.abort()
+      })
+      const healthy = await options.n8nClient.health(controller.signal)
+      if (response.destroyed) return
       const status = healthy ? 200 : 503
       json(response, status, healthy ? { status: 'ok' } : { error: 'service_unavailable' })
       finish(status)
@@ -167,7 +173,7 @@ export function createGatewayServer(options: GatewayServerOptions): http.Server 
 
     if (request.method === 'OPTIONS') {
       response.setHeader('access-control-allow-methods', 'POST, OPTIONS')
-      response.setHeader('access-control-allow-headers', 'content-type')
+      response.setHeader('access-control-allow-headers', 'content-type, ngrok-skip-browser-warning')
       response.writeHead(204).end()
       finish(204)
       return
@@ -190,6 +196,9 @@ export function createGatewayServer(options: GatewayServerOptions): http.Server 
       }
       const controller = new AbortController()
       request.on('aborted', () => controller.abort())
+      response.once('close', () => {
+        if (!response.writableEnded) controller.abort()
+      })
       const answer: GatewayChatResponse = await options.n8nClient.send(chatRequest, controller.signal)
       if (!response.writableEnded && !response.destroyed) {
         json(response, 200, answer)

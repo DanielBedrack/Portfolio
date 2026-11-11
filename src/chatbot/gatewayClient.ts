@@ -78,7 +78,10 @@ export function createGatewayClient(options: GatewayClientOptions): GatewayClien
         return await withTimeout(options.chatTimeoutMs ?? CHAT_TIMEOUT_MS, async (signal) => {
           const response = await fetchImpl(chatUrl, {
             method: 'POST',
-            headers: { 'content-type': 'application/json' },
+            headers: {
+              'content-type': 'application/json',
+              'ngrok-skip-browser-warning': '1',
+            },
             body: JSON.stringify({
               message: request.message,
               sessionId: request.sessionId,

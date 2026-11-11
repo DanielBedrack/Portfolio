@@ -42,7 +42,10 @@ describe('portfolio gateway client', () => {
     expect(fetchImpl.mock.calls[1]?.[0].toString()).toBe('https://gateway.example/chat')
     expect(fetchImpl.mock.calls[1]?.[1]).toMatchObject({
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        'ngrok-skip-browser-warning': '1',
+      },
     })
     expect(JSON.parse(String(fetchImpl.mock.calls[1]?.[1]?.body))).toEqual({
       message: 'Hello', language: 'en', requestType: 'chat', sessionId: 'session-1',
