@@ -47,6 +47,27 @@ npm run preview -- --host 127.0.0.1
 
 The browser-test server in `scripts/serve-dist.mjs` additionally reproduces GitHub Pages 404 recovery for direct case-study links.
 
+## Static chatbot preview
+
+The portfolio includes a free browser-only chatbot that answers from the same approved profile and project content used by the site. It stores the current transcript only in the tab's `sessionStorage`, sends no chat content to an external service, and uses a direct `mailto:` link for contact.
+
+The widget is disabled by default. To build and preview it locally in PowerShell:
+
+```powershell
+$env:VITE_PORTFOLIO_CHAT_ENABLED='true'
+npm run build
+npm run preview -- --host 127.0.0.1
+```
+
+To run its browser acceptance tests:
+
+```powershell
+$env:VITE_PORTFOLIO_CHAT_ENABLED='true'
+npm run test:e2e -- e2e/chatbot.spec.ts
+```
+
+GitHub Pages remains unchanged until Daniel separately approves enabling the build flag in a deployment. Building or testing the widget locally does not publish it.
+
 ## Editing content
 
 - Professional profile and experience: `src/content/profile.ts`
