@@ -1,7 +1,8 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { App } from '../app/App'
+import type { ChatRouter, RoutedChatAnswer } from '../chatbot/chatRouter'
 import { isPortfolioChatEnabled } from '../chatbot/config'
 import { PortfolioChat } from '../components/chat/PortfolioChat'
 
@@ -88,6 +89,7 @@ describe('PortfolioChat', () => {
     for (let index = 1; index <= 20; index += 1) {
       fireEvent.change(input, { target: { value: `Question ${index}` } })
       fireEvent.click(send)
+      await waitFor(() => expect(input).not.toBeDisabled())
     }
     fireEvent.change(input, { target: { value: 'שאלה נוספת' } })
     fireEvent.click(send)
@@ -159,5 +161,85 @@ describe('PortfolioChat', () => {
       'mailto:danielbedrack@gmail.com?subject=Portfolio%20inquiry',
     )
     expect(screen.queryByText(/your name|כתובת האימייל|consent/i)).not.toBeInTheDocument()
+  })
+
+  it('disables duplicate submission while a local AI answer is pending', async () => {
+    let resolveAnswer!: (answer: RoutedChatAnswer) => void
+    const answer = vi.fn(() => new Promise<RoutedChatAnswer>((resolve) => { resolveAnswer = resolve }))
+    const router: ChatRouter = { answer, resetAvailability: vi.fn() }
+    const user = userEvent.setup()
+    render(<PortfolioChat router={router} />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    await user.type(screen.getByLabelText('Ask about Daniel'), 'Who is Daniel?')
+    await user.click(screen.getByRole('button', { name: 'Send message' }))
+
+    expect(screen.getByLabelText('Ask about Daniel')).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Send message' })).toBeDisabled()
+    fireEvent.keyDown(screen.getByLabelText('Ask about Daniel'), { key: 'Enter' })
+    expect(answer).toHaveBeenCalledTimes(1)
+
+    await act(async () => resolveAnswer({
+      answer: 'Local AI answer', language: 'en', intent: 'unknown', suggestedQuestions: [], source: 'ollama',
+    }))
+    expect(await screen.findByText('Local AI answer')).toBeInTheDocument()
+    expect(screen.getByText('Local AI')).toBeInTheDocument()
+  })
+
+  it('falls back visibly but without a technical error when an injected router rejects', async () => {
+    const router: ChatRouter = {
+      answer: vi.fn().mockRejectedValue(new Error('private gateway failure')),
+      resetAvailability: vi.fn(),
+    }
+    const user = userEvent.setup()
+    render(<PortfolioChat router={router} />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    await user.type(screen.getByLabelText('Ask about Daniel'), 'Who is Daniel?')
+    await user.click(screen.getByRole('button', { name: 'Send message' }))
+
+    expect(await screen.findByText(/AI & Automation Developer/)).toBeInTheDocument()
+    expect(screen.getByText('Portfolio information')).toBeInTheDocument()
+    expect(screen.queryByText(/gateway|failure/iu)).not.toBeInTheDocument()
+  })
+
+  it('preserves the transcript when the response source changes', async () => {
+    const router: ChatRouter = {
+      answer: vi.fn()
+        .mockResolvedValueOnce({ answer: 'AI first', language: 'en', intent: 'unknown', suggestedQuestions: [], source: 'ollama' })
+        .mockResolvedValueOnce({ answer: 'Static second', language: 'en', intent: 'unknown', suggestedQuestions: [], source: 'static' }),
+      resetAvailability: vi.fn(),
+    }
+    const user = userEvent.setup()
+    render(<PortfolioChat router={router} />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    const input = screen.getByLabelText('Ask about Daniel')
+    await user.type(input, 'First')
+    await user.click(screen.getByRole('button', { name: 'Send message' }))
+    await screen.findByText('AI first')
+    await user.type(input, 'Second')
+    await user.click(screen.getByRole('button', { name: 'Send message' }))
+
+    expect(await screen.findByText('Static second')).toBeInTheDocument()
+    expect(screen.getByText('AI first')).toBeInTheDocument()
+    expect(screen.getByText('Portfolio information')).toBeInTheDocument()
+  })
+
+  it('ignores a late answer after unmount', async () => {
+    let resolveAnswer!: (answer: RoutedChatAnswer) => void
+    const router: ChatRouter = {
+      answer: () => new Promise((resolve) => { resolveAnswer = resolve }),
+      resetAvailability: vi.fn(),
+    }
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    const user = userEvent.setup()
+    const view = render(<PortfolioChat router={router} />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    await user.type(screen.getByLabelText('Ask about Daniel'), 'Late')
+    await user.click(screen.getByRole('button', { name: 'Send message' }))
+    view.unmount()
+    await act(async () => resolveAnswer({
+      answer: 'Too late', language: 'en', intent: 'unknown', suggestedQuestions: [], source: 'ollama',
+    }))
+    await waitFor(() => expect(errorSpy).not.toHaveBeenCalled())
+    errorSpy.mockRestore()
   })
 })

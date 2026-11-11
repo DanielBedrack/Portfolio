@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import { createChatRouter, type ChatRouter } from '../../chatbot/chatRouter'
+import { getPortfolioGatewayUrl } from '../../chatbot/config'
+import { createGatewayClient } from '../../chatbot/gatewayClient'
 import { detectChatLanguage } from '../../chatbot/language'
 import { replyCopy } from '../../chatbot/replies'
 import {
@@ -20,16 +23,27 @@ const CONTACT_HREF = `mailto:${profile.email}?subject=Portfolio%20inquiry`
 
 const uiCopy = {
   en: {
-    source: 'Portfolio information',
+    sourceStatic: 'Portfolio information',
+    sourceOllama: 'Local AI',
+    pending: 'Preparing an answer…',
     overLimit: 'Please shorten your message to 2,000 characters.',
     sessionLimit: 'This chat is limited to 20 visitor messages in this tab.',
   },
   he: {
-    source: 'מידע מהפורטפוליו',
+    sourceStatic: 'מידע מהפורטפוליו',
+    sourceOllama: 'AI מקומי',
+    pending: 'מכין תשובה…',
     overLimit: 'נא לקצר את ההודעה ל־2,000 תווים.',
     sessionLimit: 'השיחה מוגבלת ל־20 הודעות מהמבקר בלשונית זו.',
   },
 } as const
+
+function createDefaultRouter(): ChatRouter {
+  const gatewayUrl = getPortfolioGatewayUrl(import.meta.env.VITE_PORTFOLIO_CHAT_GATEWAY_URL)
+  return gatewayUrl
+    ? createChatRouter({ gateway: createGatewayClient({ baseUrl: gatewayUrl }) })
+    : createChatRouter({})
+}
 
 function createMessage(
   role: ChatMessage['role'],
@@ -53,19 +67,35 @@ function displayText(message: ChatMessage): string {
   return message.text.replace(` ${CONTACT_HREF}`, '')
 }
 
-export function PortfolioChat() {
+export function PortfolioChat({ router }: { readonly router?: ChatRouter } = {}) {
   const [isOpen, setIsOpen] = useState(false)
   const [input, setInput] = useState('')
   const [error, setError] = useState('')
+  const [isPending, setIsPending] = useState(false)
+  const [pendingLanguage, setPendingLanguage] = useState<ChatLanguage>('en')
   const [session, setSession] = useState<ChatSession>(() => loadChatSession())
+  const [activeRouter] = useState(() => router ?? createDefaultRouter())
   const launcherRef = useRef<HTMLButtonElement>(null)
   const dialogRef = useRef<HTMLElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const mountedRef = useRef(true)
+  const pendingRef = useRef(false)
 
   const latestAssistant = [...session.messages]
     .reverse()
     .find((message) => message.role === 'assistant')
   const displayLanguage = latestAssistant?.language ?? 'en'
+  const statusLanguage = isPending ? pendingLanguage : displayLanguage
+  const statusText = isPending
+    ? uiCopy[statusLanguage].pending
+    : latestAssistant?.source === 'ollama'
+      ? uiCopy[statusLanguage].sourceOllama
+      : uiCopy[statusLanguage].sourceStatic
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => { mountedRef.current = false }
+  }, [])
 
   useEffect(() => {
     if (isOpen) inputRef.current?.focus()
@@ -91,7 +121,8 @@ export function PortfolioChat() {
     launcherRef.current?.focus()
   }
 
-  function submitMessage(text: string) {
+  async function submitMessage(text: string) {
+    if (pendingRef.current) return
     const language = detectChatLanguage(text)
     const requestType = /job description|תיאור משרה/iu.test(text) ? 'job_match' : 'chat'
     const validation = validateChatInput(text, requestType)
@@ -107,31 +138,51 @@ export function PortfolioChat() {
     try {
       const visitor = createMessage('visitor', validation.value, language, 'visitor')
       const withVisitor = appendChatMessage(session, visitor)
-      const answer = answerStaticChat({ message: validation.value, language, requestType })
+      setSession(withVisitor)
+      saveChatSession(withVisitor)
+      setInput('')
+      setError('')
+      setPendingLanguage(language)
+      pendingRef.current = true
+      setIsPending(true)
+
+      let answer
+      try {
+        answer = await activeRouter.answer({
+          message: validation.value,
+          language,
+          requestType,
+          sessionId: session.sessionId,
+        })
+      } catch {
+        answer = { ...answerStaticChat({ message: validation.value, language, requestType }), source: 'static' as const }
+      }
+      if (!mountedRef.current) return
       const assistant = createMessage(
         'assistant',
         answer.answer,
         answer.language,
-        'static',
+        answer.source,
         answer.projectSlug,
       )
       const completed = appendChatMessage(withVisitor, assistant)
       setSession(completed)
       saveChatSession(completed)
-      setInput('')
-      setError('')
     } catch (caught) {
       if (caught instanceof ChatSessionLimitError) {
         setError(uiCopy[language].sessionLimit)
         return
       }
       throw caught
+    } finally {
+      pendingRef.current = false
+      if (mountedRef.current) setIsPending(false)
     }
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    submitMessage(input)
+    void submitMessage(input)
   }
 
   function trapDialogFocus(event: React.KeyboardEvent<HTMLElement>) {
@@ -194,9 +245,9 @@ export function PortfolioChat() {
             </button>
           </header>
 
-          <div className={styles.status} lang={displayLanguage} dir={displayLanguage === 'he' ? 'rtl' : 'ltr'}>
+          <div className={styles.status} lang={statusLanguage} dir={statusLanguage === 'he' ? 'rtl' : 'ltr'}>
             <span className={styles.statusDot} aria-hidden="true" />
-            {uiCopy[displayLanguage].source}
+            {statusText}
           </div>
 
           <div className={styles.suggestions} aria-label="Suggested questions">
@@ -205,8 +256,9 @@ export function PortfolioChat() {
                 className={styles.suggestion}
                 type="button"
                 key={question}
+                disabled={isPending}
                 dir={displayLanguage === 'he' ? 'rtl' : 'ltr'}
-                onClick={() => submitMessage(question)}
+                onClick={() => void submitMessage(question)}
               >
                 {question}
               </button>
@@ -260,9 +312,10 @@ export function PortfolioChat() {
               rows={2}
               maxLength={6_001}
               placeholder="Ask about experience, skills, or projects"
+              disabled={isPending}
               onChange={(event) => setInput(event.target.value)}
             />
-            <button className={styles.sendButton} type="submit" disabled={!input.trim()}>
+            <button className={styles.sendButton} type="submit" disabled={isPending || !input.trim()}>
               Send message
             </button>
           </form>
