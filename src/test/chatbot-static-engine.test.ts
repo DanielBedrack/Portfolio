@@ -97,4 +97,27 @@ describe('analyzeStaticJobMatch', () => {
     expect(JSON.stringify(result)).not.toMatch(/\d+%|\d+\/\d+/u)
     expect(result.followUpQuestions.length).toBeGreaterThan(0)
   })
+
+  it('does not confuse JavaScript with Java and exposes role evidence', () => {
+    const result = analyzeStaticJobMatch(
+      'Seeking a technical project manager with JavaScript experience.',
+      'en',
+    )
+
+    expect(result.evidence).toEqual(
+      expect.arrayContaining(['JavaScript', 'Technical Project Manager']),
+    )
+    expect(result.gaps).not.toContain('Java')
+  })
+
+  it('includes evidence, gaps, and follow-up questions in the job answer', () => {
+    const result = answerStaticChat({
+      message: 'Job description: TypeScript and AWS are required.',
+      requestType: 'job_match',
+    })
+
+    expect(result.answer).toContain('TypeScript')
+    expect(result.answer).toContain('AWS')
+    expect(result.answer).toContain('Which requirements are essential rather than optional?')
+  })
 })

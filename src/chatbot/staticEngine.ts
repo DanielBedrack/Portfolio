@@ -53,7 +53,7 @@ function normalize(value: string): string {
 
 function containsTerm(haystack: string, term: string): boolean {
   const normalizedTerm = normalize(term)
-  return ` ${haystack} `.includes(` ${normalizedTerm} `) || haystack.includes(normalizedTerm)
+  return ` ${haystack} `.includes(` ${normalizedTerm} `)
 }
 
 function findProject(message: string) {
@@ -103,9 +103,17 @@ export function analyzeStaticJobMatch(
     if (!approvedTechnologies.has(key)) approvedTechnologies.set(key, item)
   }
 
-  const evidence = Array.from(approvedTechnologies.entries())
+  const approvedRoles = profile.title
+    .split('|')
+    .map((role) => role.trim())
+    .filter(Boolean)
+
+  const evidence = [
+    ...Array.from(approvedTechnologies.entries())
     .filter(([key]) => containsTerm(normalizedDescription, key))
-    .map(([, label]) => label)
+      .map(([, label]) => label),
+    ...approvedRoles.filter((role) => containsTerm(normalizedDescription, role)),
+  ]
 
   const gaps = Object.entries(GAP_CATALOG)
     .filter(([, aliases]) => aliases.some((alias) => containsTerm(normalizedDescription, alias)))
@@ -172,7 +180,9 @@ export function answerStaticChat(request: ChatRequest): StaticChatAnswer {
       const result = analyzeStaticJobMatch(validation.value, language)
       answer = `${copy.jobEvidence}:\n${
         result.evidence.length ? formatList(result.evidence) : copy.noEvidence
-      }\n${copy.jobGaps}:\n${result.gaps.length ? formatList(result.gaps) : copy.noGaps}`
+      }\n${copy.jobGaps}:\n${
+        result.gaps.length ? formatList(result.gaps) : copy.noGaps
+      }\n${formatList(result.followUpQuestions)}`
       break
     }
     case 'contact':

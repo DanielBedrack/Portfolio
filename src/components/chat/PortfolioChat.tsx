@@ -4,6 +4,7 @@ import { replyCopy } from '../../chatbot/replies'
 import {
   ChatSessionLimitError,
   appendChatMessage,
+  createSessionId,
   loadChatSession,
   saveChatSession,
   type ChatMessage,
@@ -12,6 +13,7 @@ import {
 import { answerStaticChat, validateChatInput } from '../../chatbot/staticEngine'
 import type { ChatLanguage } from '../../chatbot/types'
 import { profile } from '../../content/profile'
+import { projects } from '../../content/projects'
 import styles from '../../styles/chatbot.module.css'
 
 const CONTACT_HREF = `mailto:${profile.email}?subject=Portfolio%20inquiry`
@@ -34,13 +36,15 @@ function createMessage(
   text: string,
   language: ChatLanguage,
   source: ChatMessage['source'],
+  projectSlug?: string,
 ): ChatMessage {
   return {
-    id: globalThis.crypto.randomUUID(),
+    id: createSessionId(),
     role,
     text,
     language,
     source,
+    ...(projectSlug ? { projectSlug } : {}),
     createdAt: new Date().toISOString(),
   }
 }
@@ -55,6 +59,7 @@ export function PortfolioChat() {
   const [error, setError] = useState('')
   const [session, setSession] = useState<ChatSession>(() => loadChatSession())
   const launcherRef = useRef<HTMLButtonElement>(null)
+  const dialogRef = useRef<HTMLElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const latestAssistant = [...session.messages]
@@ -88,7 +93,8 @@ export function PortfolioChat() {
 
   function submitMessage(text: string) {
     const language = detectChatLanguage(text)
-    const validation = validateChatInput(text, 'chat')
+    const requestType = /job description|תיאור משרה/iu.test(text) ? 'job_match' : 'chat'
+    const validation = validateChatInput(text, requestType)
     if (!validation.ok) {
       setError(
         validation.reason === 'too_long'
@@ -101,8 +107,14 @@ export function PortfolioChat() {
     try {
       const visitor = createMessage('visitor', validation.value, language, 'visitor')
       const withVisitor = appendChatMessage(session, visitor)
-      const answer = answerStaticChat({ message: validation.value, language })
-      const assistant = createMessage('assistant', answer.answer, answer.language, 'static')
+      const answer = answerStaticChat({ message: validation.value, language, requestType })
+      const assistant = createMessage(
+        'assistant',
+        answer.answer,
+        answer.language,
+        'static',
+        answer.projectSlug,
+      )
       const completed = appendChatMessage(withVisitor, assistant)
       setSession(completed)
       saveChatSession(completed)
@@ -122,6 +134,26 @@ export function PortfolioChat() {
     submitMessage(input)
   }
 
+  function trapDialogFocus(event: React.KeyboardEvent<HTMLElement>) {
+    if (event.key !== 'Tab') return
+    const focusable = Array.from(
+      dialogRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), textarea:not([disabled]), a[href]',
+      ) ?? [],
+    )
+    const first = focusable[0]
+    const last = focusable.at(-1)
+    if (!first || !last) return
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault()
+      first.focus()
+    }
+  }
+
   return (
     <div className={styles.root}>
       <button
@@ -138,10 +170,12 @@ export function PortfolioChat() {
 
       {isOpen ? (
         <section
+          ref={dialogRef}
           className={styles.dialog}
           role="dialog"
           aria-modal="true"
           aria-labelledby="portfolio-chat-title"
+          onKeyDown={trapDialogFocus}
         >
           <header className={styles.header}>
             <div>
@@ -198,6 +232,16 @@ export function PortfolioChat() {
                 {message.role === 'assistant' && message.text.includes(CONTACT_HREF) ? (
                   <a className={styles.emailLink} href={CONTACT_HREF}>
                     Email Daniel
+                  </a>
+                ) : null}
+                {message.role === 'assistant' && message.projectSlug ? (
+                  <a
+                    className={styles.emailLink}
+                    href={`/Portfolio/projects/${message.projectSlug}`}
+                  >
+                    Open project:{' '}
+                    {projects.find(({ slug }) => slug === message.projectSlug)?.shortTitle ??
+                      message.projectSlug}
                   </a>
                 ) : null}
               </div>

@@ -75,6 +75,22 @@ describe('chat session persistence', () => {
     expect(withAssistant.messages).toHaveLength(21)
   })
 
+  it('persists an approved project slug on an assistant message', () => {
+    const session = appendChatMessage(loadChatSession(sessionStorage), {
+      id: 'assistant-project',
+      role: 'assistant',
+      text: 'RemindMe details',
+      language: 'en',
+      source: 'static',
+      projectSlug: 'remindme',
+      createdAt: '2026-11-11T12:01:00.000Z',
+    })
+
+    saveChatSession(session, sessionStorage)
+
+    expect(loadChatSession(sessionStorage).messages[0].projectSlug).toBe('remindme')
+  })
+
   it('recovers from malformed or wrong-version storage', () => {
     sessionStorage.setItem(STORAGE_KEY, '{not-json')
     const malformed = loadChatSession(sessionStorage)

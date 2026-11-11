@@ -10,6 +10,7 @@ export interface ChatMessage {
   readonly text: string
   readonly language: ChatLanguage
   readonly source: 'visitor' | 'static' | 'ollama'
+  readonly projectSlug?: string
   readonly createdAt: string
 }
 
@@ -72,7 +73,9 @@ function isMessage(value: unknown): value is ChatMessage {
     sourceIsValid &&
     roleMatchesSource &&
     typeof message.createdAt === 'string' &&
-    message.createdAt.length > 0
+    message.createdAt.length > 0 &&
+    (message.projectSlug === undefined ||
+      (typeof message.projectSlug === 'string' && message.projectSlug.length > 0))
   )
 }
 

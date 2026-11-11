@@ -107,6 +107,45 @@ describe('PortfolioChat', () => {
     expect(launcher).toHaveFocus()
   })
 
+  it('keeps Tab focus inside the modal dialog', async () => {
+    const user = userEvent.setup()
+    render(<PortfolioChat />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    const send = screen.getByRole('button', { name: 'Send message' })
+    fireEvent.change(screen.getByLabelText('Ask about Daniel'), { target: { value: 'Question' } })
+    send.focus()
+
+    await user.tab()
+
+    expect(screen.getByRole('button', { name: 'Close portfolio assistant' })).toHaveFocus()
+  })
+
+  it('accepts an explicit job description up to 6,000 characters', async () => {
+    const user = userEvent.setup()
+    render(<PortfolioChat />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    const description = `Job description: TypeScript ${'a'.repeat(2_500)}`
+    fireEvent.change(screen.getByLabelText('Ask about Daniel'), { target: { value: description } })
+
+    await user.click(screen.getByRole('button', { name: 'Send message' }))
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+    expect(screen.getByText(/Evidence in the portfolio/)).toBeInTheDocument()
+  })
+
+  it('links project-detail answers to the portfolio route', async () => {
+    const user = userEvent.setup()
+    render(<PortfolioChat />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    await user.type(screen.getByLabelText('Ask about Daniel'), 'Tell me about RemindMe')
+    await user.click(screen.getByRole('button', { name: 'Send message' }))
+
+    expect(screen.getByRole('link', { name: 'Open project: RemindMe' })).toHaveAttribute(
+      'href',
+      '/Portfolio/projects/remindme',
+    )
+  })
+
   it('announces replies politely and offers direct email without collecting details', async () => {
     const user = userEvent.setup()
     render(<PortfolioChat />)
