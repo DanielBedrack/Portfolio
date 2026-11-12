@@ -1,4 +1,4 @@
-import type { ChatLanguage } from './types'
+import type { ChatIntent, ChatLanguage } from './types'
 
 const STORAGE_KEY = 'portfolio-chat.session.v1'
 const STORAGE_VERSION = 1
@@ -10,6 +10,7 @@ export interface ChatMessage {
   readonly text: string
   readonly language: ChatLanguage
   readonly source: 'visitor' | 'static' | 'ollama'
+  readonly intent?: ChatIntent
   readonly projectSlug?: string
   readonly createdAt: string
 }
@@ -74,6 +75,9 @@ function isMessage(value: unknown): value is ChatMessage {
     roleMatchesSource &&
     typeof message.createdAt === 'string' &&
     message.createdAt.length > 0 &&
+    (message.intent === undefined || [
+      'greeting', 'identity', 'experience', 'skills', 'projects', 'project_detail', 'job_match', 'contact', 'unknown',
+    ].includes(message.intent as string)) &&
     (message.projectSlug === undefined ||
       (typeof message.projectSlug === 'string' && message.projectSlug.length > 0))
   )

@@ -136,6 +136,18 @@ export function createGatewayServer(options: GatewayServerOptions): http.Server 
     }
 
     if (url.pathname === '/health') {
+      if (request.method === 'OPTIONS') {
+        if (!origin || !origins.has(origin)) {
+          json(response, 403, { error: 'origin_not_allowed' })
+          finish(403)
+          return
+        }
+        response.setHeader('access-control-allow-methods', 'GET, OPTIONS')
+        response.setHeader('access-control-allow-headers', 'ngrok-skip-browser-warning')
+        response.writeHead(204).end()
+        finish(204)
+        return
+      }
       if (request.method !== 'GET') {
         json(response, 405, { error: 'method_not_allowed' })
         finish(405)

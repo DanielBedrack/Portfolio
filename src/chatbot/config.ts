@@ -1,6 +1,6 @@
 export const CHAT_MESSAGE_LIMIT = 2_000
 export const JOB_DESCRIPTION_LIMIT = 6_000
-export const HEALTH_TIMEOUT_MS = 1_500
+export const HEALTH_TIMEOUT_MS = 5_000
 export const CHAT_TIMEOUT_MS = 25_000
 export const HEALTH_TTL_MS = 60_000
 

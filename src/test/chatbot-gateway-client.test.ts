@@ -11,7 +11,7 @@ afterEach(() => vi.useRealTimers())
 
 describe('portfolio gateway client', () => {
   it('uses fixed timeouts and accepts only HTTPS or explicit local development URLs', () => {
-    expect([HEALTH_TIMEOUT_MS, CHAT_TIMEOUT_MS, HEALTH_TTL_MS]).toEqual([1_500, 25_000, 60_000])
+    expect([HEALTH_TIMEOUT_MS, CHAT_TIMEOUT_MS, HEALTH_TTL_MS]).toEqual([5_000, 25_000, 60_000])
     expect(getPortfolioGatewayUrl('https://free-domain.ngrok.app/')?.href).toBe('https://free-domain.ngrok.app/')
     expect(getPortfolioGatewayUrl('http://localhost:8080/')?.href).toBe('http://localhost:8080/')
     expect(getPortfolioGatewayUrl('http://127.0.0.1:8080/')?.href).toBe('http://127.0.0.1:8080/')
@@ -38,7 +38,10 @@ describe('portfolio gateway client', () => {
     })).resolves.toEqual({ answer: 'Local answer', language: 'en', source: 'ollama' })
 
     expect(fetchImpl.mock.calls[0]?.[0].toString()).toBe('https://gateway.example/health')
-    expect(fetchImpl.mock.calls[0]?.[1]?.method).toBe('GET')
+    expect(fetchImpl.mock.calls[0]?.[1]).toMatchObject({
+      method: 'GET',
+      headers: { 'ngrok-skip-browser-warning': '1' },
+    })
     expect(fetchImpl.mock.calls[1]?.[0].toString()).toBe('https://gateway.example/chat')
     expect(fetchImpl.mock.calls[1]?.[1]).toMatchObject({
       method: 'POST',

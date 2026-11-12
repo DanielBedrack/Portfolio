@@ -28,6 +28,34 @@ describe('validateChatInput', () => {
 })
 
 describe('answerStaticChat', () => {
+  it('welcomes a Hebrew greeting without treating it as a knowledge gap', () => {
+    const result = answerStaticChat({ message: 'היי' })
+
+    expect(result.intent).toBe('greeting')
+    expect(result.language).toBe('he')
+    expect(result.answer).toContain('העוזר של תיק העבודות של דניאל')
+    expect(result.answer).not.toContain('אינו מופיע')
+  })
+
+  it.each(['הייי', 'היוש', 'Hello there!'])('accepts the natural greeting %s', (message) => {
+    const result = answerStaticChat({ message })
+
+    expect(result.intent).toBe('greeting')
+    expect(result.answer).not.toMatch(/אינו מופיע|I don't know/iu)
+  })
+
+  it('asks the visitor to choose a topic when a greeting is followed by ספר לי', () => {
+    const result = answerStaticChat({
+      message: 'ספר לי',
+      language: 'he',
+      context: { previousIntent: 'greeting' },
+    })
+
+    expect(result.intent).toBe('greeting')
+    expect(result.answer).toBe('בשמחה — על מה תרצה שאספר: הניסיון, הכישורים או הפרויקטים?')
+    expect(result.answer).not.toContain('אינו מופיע')
+  })
+
   it('answers identity and experience from the approved profile', () => {
     const identity = answerStaticChat({ message: "What is Daniel's role?" })
     const experience = answerStaticChat({ message: 'Where did Daniel work?' })
@@ -61,6 +89,35 @@ describe('answerStaticChat', () => {
     expect(detail.intent).toBe('project_detail')
     expect(detail.projectSlug).toBe('remindme')
     expect(detail.answer).toContain(projects.find(({ slug }) => slug === 'remindme')?.summary)
+  })
+
+  it('keeps Hebrew project answers in Hebrew', () => {
+    const list = answerStaticChat({ message: 'ספר על פרויקטים', language: 'he' })
+    const detail = answerStaticChat({ message: 'ספר על RemindMe', language: 'he' })
+
+    expect(list.answer).toContain('מערכת CRM משולבת')
+    expect(list.answer).toContain('מערכת תפעול לחברת אנרגיה סולארית')
+    expect(detail.answer).toContain('עוזר קניות מבוסס מיקום')
+    expect(detail.answer).toContain('תפקיד:')
+  })
+
+  it('uses the previous project context for a short follow-up', () => {
+    const choose = answerStaticChat({
+      message: 'ספר לעומק',
+      language: 'he',
+      context: { previousIntent: 'projects' },
+    })
+    const detail = answerStaticChat({
+      message: 'ספר לעומק',
+      language: 'he',
+      context: { previousIntent: 'project_detail', previousProjectSlug: 'remindme' },
+    })
+
+    expect(choose.intent).toBe('projects')
+    expect(choose.answer).toContain('על איזה פרויקט תרצה להעמיק?')
+    expect(detail.intent).toBe('project_detail')
+    expect(detail.projectSlug).toBe('remindme')
+    expect(detail.answer).toContain('עוזר קניות מבוסס מיקום')
   })
 
   it('does not reveal instructions or invent experience', () => {

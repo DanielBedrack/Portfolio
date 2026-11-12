@@ -9,7 +9,7 @@ const staticResult: StaticChatAnswer = {
   intent: 'unknown',
   suggestedQuestions: ['Question'],
 }
-const request = { message: 'Hello', language: 'en' as const, requestType: 'chat' as const, sessionId: 's1' }
+const request = { message: 'Tell me about Daniel\'s experience', language: 'en' as const, requestType: 'chat' as const, sessionId: 's1' }
 
 function gateway(healthy = true): GatewayClient & { health: ReturnType<typeof vi.fn>; chat: ReturnType<typeof vi.fn> } {
   return {
@@ -19,6 +19,60 @@ function gateway(healthy = true): GatewayClient & { health: ReturnType<typeof vi
 }
 
 describe('hybrid chat router', () => {
+  it.each([
+    ['Hello!', 'en'],
+    ['היי', 'he'],
+    ['הייי', 'he'],
+    ['היוש', 'he'],
+    ['Hello there!', 'en'],
+    ['שלום.', 'he'],
+  ] as const)('answers a simple greeting %s statically without probing the gateway', async (message, language) => {
+    const ai = gateway()
+    const staticAnswer = vi.fn().mockReturnValue({ ...staticResult, language, intent: 'greeting' })
+    const router = createChatRouter({ gateway: ai, staticAnswer })
+
+    await expect(router.answer({ ...request, message, language })).resolves.toMatchObject({
+      language,
+      intent: 'greeting',
+      source: 'static',
+    })
+    expect(staticAnswer).toHaveBeenCalledTimes(1)
+    expect(ai.health).not.toHaveBeenCalled()
+    expect(ai.chat).not.toHaveBeenCalled()
+  })
+
+  it('keeps a substantive message that starts with a greeting on the AI route', async () => {
+    const ai = gateway()
+    const router = createChatRouter({ gateway: ai })
+
+    await expect(router.answer({ ...request, message: 'Hi, tell me about Daniel\'s experience' }))
+      .resolves.toMatchObject({ answer: 'AI answer', source: 'ollama' })
+    expect(ai.health).toHaveBeenCalledTimes(1)
+    expect(ai.chat).toHaveBeenCalledTimes(1)
+  })
+
+  it('clarifies an ambiguous follow-up after a greeting before calling AI', async () => {
+    const router = createChatRouter({ gateway: gateway() })
+
+    await expect(router.answer({
+      ...request,
+      message: 'ספר לי',
+      language: 'he',
+      context: { previousIntent: 'greeting' },
+    })).resolves.toMatchObject({
+      answer: 'בשמחה — על מה תרצה שאספר: הניסיון, הכישורים או הפרויקטים?',
+      intent: 'greeting',
+      source: 'static',
+    })
+  })
+
+  it('preserves the detected visitor intent on a successful AI answer', async () => {
+    const router = createChatRouter({ gateway: gateway() })
+
+    await expect(router.answer({ ...request, message: 'Tell me about Daniel projects' }))
+      .resolves.toMatchObject({ answer: 'AI answer', intent: 'projects', source: 'ollama' })
+  })
+
   it('reuses one healthy probe for 60 seconds and returns local AI', async () => {
     let now = 1_000
     const ai = gateway()
@@ -31,32 +85,29 @@ describe('hybrid chat router', () => {
     expect(ai.chat).toHaveBeenCalledTimes(2)
   })
 
-  it('uses static mode without sending chat when health is unavailable', async () => {
-    const ai = gateway(false)
+  it('retries health on the next message after a transient unavailable result', async () => {
+    const ai = gateway()
+    ai.health.mockResolvedValueOnce(false).mockResolvedValueOnce(true)
     const staticAnswer = vi.fn().mockReturnValue(staticResult)
     const router = createChatRouter({ gateway: ai, staticAnswer })
 
     await expect(router.answer(request)).resolves.toEqual({ ...staticResult, source: 'static' })
-    expect(ai.chat).not.toHaveBeenCalled()
-    expect(staticAnswer).toHaveBeenCalledTimes(1)
+    await expect(router.answer({ ...request, message: 'Second question' }))
+      .resolves.toMatchObject({ answer: 'AI answer', source: 'ollama' })
+    expect(ai.health).toHaveBeenCalledTimes(2)
+    expect(ai.chat).toHaveBeenCalledTimes(1)
   })
 
-  it.each([429, 502, 503])('falls back once after status %s and holds AI unhealthy until TTL', async (status) => {
-    let now = 10_000
+  it.each([429, 502, 503])('retries after a transient chat status %s instead of locking static mode', async (status) => {
     const ai = gateway()
     ai.chat.mockRejectedValueOnce(Object.assign(new Error('safe'), { status }))
     const staticAnswer = vi.fn().mockReturnValue(staticResult)
-    const router = createChatRouter({ gateway: ai, staticAnswer, now: () => now, healthTtlMs: 60_000 })
+    const router = createChatRouter({ gateway: ai, staticAnswer, healthTtlMs: 60_000 })
 
     await expect(router.answer(request)).resolves.toEqual({ ...staticResult, source: 'static' })
-    await router.answer({ ...request, message: 'Second' })
-    expect(ai.health).toHaveBeenCalledTimes(1)
-    expect(ai.chat).toHaveBeenCalledTimes(1)
-    expect(staticAnswer).toHaveBeenCalledTimes(2)
-
-    now += 60_001
-    await expect(router.answer({ ...request, message: 'Third' })).resolves.toMatchObject({ source: 'ollama' })
+    await expect(router.answer({ ...request, message: 'Second' })).resolves.toMatchObject({ source: 'ollama' })
     expect(ai.health).toHaveBeenCalledTimes(2)
+    expect(ai.chat).toHaveBeenCalledTimes(2)
   })
 
   it('falls back on network, abort, and malformed-response errors and can be reset', async () => {

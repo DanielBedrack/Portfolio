@@ -71,6 +71,18 @@ test('exposes only health and chat with exact CORS and safe methods', async () =
     const health = await fetch(new URL('/health', baseUrl))
     assert.equal(health.status, 200)
 
+    const healthPreflight = await fetch(new URL('/health', baseUrl), {
+      method: 'OPTIONS',
+      headers: { origin: 'https://danielbedrack.github.io' },
+    })
+    assert.equal(healthPreflight.status, 204)
+    assert.equal(healthPreflight.headers.get('access-control-allow-origin'), 'https://danielbedrack.github.io')
+    assert.equal(healthPreflight.headers.get('access-control-allow-methods'), 'GET, OPTIONS')
+    assert.equal(
+      healthPreflight.headers.get('access-control-allow-headers'),
+      'ngrok-skip-browser-warning',
+    )
+
     const preflight = await fetch(new URL('/chat', baseUrl), {
       method: 'OPTIONS',
       headers: { origin: 'https://danielbedrack.github.io' },

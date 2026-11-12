@@ -1,6 +1,7 @@
 export type ChatLanguage = 'he' | 'en'
 
 export type ChatIntent =
+  | 'greeting'
   | 'identity'
   | 'experience'
   | 'skills'
@@ -12,10 +13,16 @@ export type ChatIntent =
 
 export type ChatRequestType = 'chat' | 'job_match'
 
+export interface ChatContext {
+  readonly previousIntent?: ChatIntent
+  readonly previousProjectSlug?: string
+}
+
 export interface ChatRequest {
   readonly message: string
   readonly language?: ChatLanguage
   readonly requestType?: ChatRequestType
+  readonly context?: ChatContext
 }
 
 export interface StaticChatAnswer {

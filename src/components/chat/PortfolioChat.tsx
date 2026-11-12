@@ -3,6 +3,7 @@ import { createChatRouter, type ChatRouter } from '../../chatbot/chatRouter'
 import { getPortfolioGatewayUrl } from '../../chatbot/config'
 import { createGatewayClient } from '../../chatbot/gatewayClient'
 import { detectChatLanguage } from '../../chatbot/language'
+import { getQuickReplies } from '../../chatbot/quickReplies'
 import { replyCopy } from '../../chatbot/replies'
 import {
   ChatSessionLimitError,
@@ -13,8 +14,9 @@ import {
   type ChatMessage,
   type ChatSession,
 } from '../../chatbot/session'
-import { answerStaticChat, validateChatInput } from '../../chatbot/staticEngine'
+import { answerStaticChat, detectIntent, validateChatInput } from '../../chatbot/staticEngine'
 import type { ChatLanguage } from '../../chatbot/types'
+import type { ChatIntent } from '../../chatbot/types'
 import { profile } from '../../content/profile'
 import { projects } from '../../content/projects'
 import styles from '../../styles/chatbot.module.css'
@@ -25,16 +27,20 @@ const uiCopy = {
   en: {
     sourceStatic: 'Portfolio information',
     sourceOllama: 'Local AI',
-    pending: 'Preparing an answer…',
+    thinking: 'AI is thinking',
     overLimit: 'Please shorten your message to 2,000 characters.',
     sessionLimit: 'This chat is limited to 20 visitor messages in this tab.',
+    quickReplyPrompt: 'What would you like to know about Daniel?',
+    quickReplyLabel: 'Suggested next questions',
   },
   he: {
     sourceStatic: 'מידע מהפורטפוליו',
     sourceOllama: 'AI מקומי',
-    pending: 'מכין תשובה…',
+    thinking: 'AI חושב',
     overLimit: 'נא לקצר את ההודעה ל־2,000 תווים.',
     sessionLimit: 'השיחה מוגבלת ל־20 הודעות מהמבקר בלשונית זו.',
+    quickReplyPrompt: 'מה תרצה לדעת על דניאל?',
+    quickReplyLabel: 'אפשרויות המשך',
   },
 } as const
 
@@ -51,6 +57,7 @@ function createMessage(
   language: ChatLanguage,
   source: ChatMessage['source'],
   projectSlug?: string,
+  intent?: ChatIntent,
 ): ChatMessage {
   return {
     id: createSessionId(),
@@ -59,6 +66,7 @@ function createMessage(
     language,
     source,
     ...(projectSlug ? { projectSlug } : {}),
+    ...(intent ? { intent } : {}),
     createdAt: new Date().toISOString(),
   }
 }
@@ -78,19 +86,28 @@ export function PortfolioChat({ router }: { readonly router?: ChatRouter } = {})
   const launcherRef = useRef<HTMLButtonElement>(null)
   const dialogRef = useRef<HTMLElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const messagesRef = useRef<HTMLDivElement>(null)
   const mountedRef = useRef(true)
   const pendingRef = useRef(false)
 
   const latestAssistant = [...session.messages]
     .reverse()
     .find((message) => message.role === 'assistant')
+  const latestVisitor = [...session.messages]
+    .reverse()
+    .find((message) => message.role === 'visitor')
   const displayLanguage = latestAssistant?.language ?? 'en'
-  const statusLanguage = isPending ? pendingLanguage : displayLanguage
-  const statusText = isPending
-    ? uiCopy[statusLanguage].pending
-    : latestAssistant?.source === 'ollama'
-      ? uiCopy[statusLanguage].sourceOllama
-      : uiCopy[statusLanguage].sourceStatic
+  const contextualIntent = latestAssistant?.intent && latestAssistant.intent !== 'unknown'
+    ? latestAssistant.intent
+    : latestVisitor
+      ? detectIntent(latestVisitor.text)
+      : undefined
+  const interfaceLanguage = isPending ? pendingLanguage : displayLanguage
+  const quickReplies = getQuickReplies(latestVisitor?.text, interfaceLanguage, contextualIntent)
+  const statusLanguage = interfaceLanguage
+  const statusText = latestAssistant?.source === 'ollama'
+    ? uiCopy[statusLanguage].sourceOllama
+    : uiCopy[statusLanguage].sourceStatic
 
   useEffect(() => {
     mountedRef.current = true
@@ -100,6 +117,12 @@ export function PortfolioChat({ router }: { readonly router?: ChatRouter } = {})
   useEffect(() => {
     if (isOpen) inputRef.current?.focus()
   }, [isOpen])
+
+  useEffect(() => {
+    const messages = messagesRef.current
+    if (!isOpen || !messages) return
+    messages.scrollTop = messages.scrollHeight
+  }, [isOpen, isPending, session.messages.length])
 
   useEffect(() => {
     if (!isOpen) return
@@ -147,15 +170,22 @@ export function PortfolioChat({ router }: { readonly router?: ChatRouter } = {})
       setIsPending(true)
 
       let answer
+      const context = latestAssistant
+        ? { previousIntent: contextualIntent, previousProjectSlug: latestAssistant.projectSlug }
+        : undefined
       try {
         answer = await activeRouter.answer({
           message: validation.value,
           language,
           requestType,
           sessionId: session.sessionId,
+          ...(context ? { context } : {}),
         })
       } catch {
-        answer = { ...answerStaticChat({ message: validation.value, language, requestType }), source: 'static' as const }
+        answer = {
+          ...answerStaticChat({ message: validation.value, language, requestType, context }),
+          source: 'static' as const,
+        }
       }
       if (!mountedRef.current) return
       const assistant = createMessage(
@@ -164,6 +194,7 @@ export function PortfolioChat({ router }: { readonly router?: ChatRouter } = {})
         answer.language,
         answer.source,
         answer.projectSlug,
+        answer.intent,
       )
       const completed = appendChatMessage(withVisitor, assistant)
       setSession(completed)
@@ -183,6 +214,13 @@ export function PortfolioChat({ router }: { readonly router?: ChatRouter } = {})
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     void submitMessage(input)
+  }
+
+  function handleInputKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== 'Enter' || event.shiftKey || event.nativeEvent.isComposing) return
+    event.preventDefault()
+    if (isPending || !input.trim()) return
+    event.currentTarget.form?.requestSubmit()
   }
 
   function trapDialogFocus(event: React.KeyboardEvent<HTMLElement>) {
@@ -250,22 +288,33 @@ export function PortfolioChat({ router }: { readonly router?: ChatRouter } = {})
             {statusText}
           </div>
 
-          <div className={styles.suggestions} aria-label="Suggested questions">
-            {replyCopy[displayLanguage].suggestedQuestions.map((question) => (
-              <button
-                className={styles.suggestion}
-                type="button"
-                key={question}
-                disabled={isPending}
-                dir={displayLanguage === 'he' ? 'rtl' : 'ltr'}
-                onClick={() => void submitMessage(question)}
-              >
-                {question}
-              </button>
-            ))}
+          <div className={styles.suggestionPanel} dir={interfaceLanguage === 'he' ? 'rtl' : 'ltr'}>
+            <p className={styles.suggestionPrompt} dir={interfaceLanguage === 'he' ? 'rtl' : 'ltr'}>
+              {uiCopy[interfaceLanguage].quickReplyPrompt}
+            </p>
+            <div className={styles.suggestions} aria-label={uiCopy[interfaceLanguage].quickReplyLabel}>
+              {quickReplies.map(({ label, question }) => (
+                <button
+                  className={styles.suggestion}
+                  type="button"
+                  key={label}
+                  disabled={isPending}
+                  dir={interfaceLanguage === 'he' ? 'rtl' : 'ltr'}
+                  onClick={() => void submitMessage(question)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className={styles.messages} role="log" aria-label="Chat messages" aria-live="polite">
+          <div
+            ref={messagesRef}
+            className={styles.messages}
+            role="log"
+            aria-label="Chat messages"
+            aria-live="polite"
+          >
             {session.messages.length === 0 ? (
               <p className={styles.empty}>
                 Ask about Daniel's experience, skills, projects, or fit for a role.
@@ -298,6 +347,27 @@ export function PortfolioChat({ router }: { readonly router?: ChatRouter } = {})
                 ) : null}
               </div>
             ))}
+            {isPending ? (
+              <div
+                className={`${styles.message} ${styles.assistantMessage} ${styles.thinkingMessage}`}
+                role="status"
+                aria-label={uiCopy[pendingLanguage].thinking}
+                dir={pendingLanguage === 'he' ? 'rtl' : 'ltr'}
+                lang={pendingLanguage}
+              >
+                <span className={styles.thinkingMark} aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M12 3.5c.55 4.94 3.56 7.95 8.5 8.5-4.94.55-7.95 3.56-8.5 8.5-.55-4.94-3.56-7.95-8.5-8.5 4.94-.55 7.95-3.56 8.5-8.5Z" />
+                  </svg>
+                </span>
+                <span className={styles.thinkingText}>{uiCopy[pendingLanguage].thinking}</span>
+                <span className={styles.thinkingDots} aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              </div>
+            ) : null}
           </div>
 
           <form className={styles.composer} onSubmit={handleSubmit}>
@@ -314,6 +384,7 @@ export function PortfolioChat({ router }: { readonly router?: ChatRouter } = {})
               placeholder="Ask about experience, skills, or projects"
               disabled={isPending}
               onChange={(event) => setInput(event.target.value)}
+              onKeyDown={handleInputKeyDown}
             />
             <button className={styles.sendButton} type="submit" disabled={isPending || !input.trim()}>
               Send message

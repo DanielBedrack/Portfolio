@@ -62,7 +62,11 @@ export function createGatewayClient(options: GatewayClientOptions): GatewayClien
     async health() {
       try {
         return await withTimeout(options.healthTimeoutMs ?? HEALTH_TIMEOUT_MS, async (signal) => {
-          const response = await fetchImpl(healthUrl, { method: 'GET', signal })
+          const response = await fetchImpl(healthUrl, {
+            method: 'GET',
+            headers: { 'ngrok-skip-browser-warning': '1' },
+            signal,
+          })
           if (!response.ok) return false
           const value = await response.json() as unknown
           return Boolean(value) && typeof value === 'object' &&

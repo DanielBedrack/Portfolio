@@ -57,6 +57,7 @@ Do not add these two variables to the production deployment until Daniel separat
 Import or update [`../workflows/portfolio-chat.json`](../workflows/portfolio-chat.json) in the local n8n instance. Confirm all of the following before activation:
 
 - Chat Trigger webhook ID is `94c404d3-766e-4a0b-906c-517ad0b0815a`.
+- Chat Trigger has **Make Chat Publicly Available** enabled and **Mode** set to **Embedded Chat** (`webhook`). Without these settings, n8n registers the path but rejects production requests with `404`.
 - The model is `qwen3:4b-instruct`.
 - Thinking is off, temperature is `0.2`, context is `4096`, and maximum output is `256` tokens.
 - There is no `save_portfolio_lead` tool connected to the public chat.

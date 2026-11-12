@@ -17,6 +17,7 @@ const INPUT_LIMITS: Readonly<Record<ChatRequestType, number>> = {
 }
 
 const INTENT_TERMS: Readonly<Record<Exclude<ChatIntent, 'project_detail' | 'unknown'>, readonly string[]>> = {
+  greeting: ['hi', 'hello', 'hey', 'היי', 'הי', 'שלום'],
   identity: ['who are', 'who is daniel', 'professional title', 'role', 'מי אתה', 'מי זה דניאל', 'תפקיד'],
   experience: [
     'experience',
@@ -35,6 +36,51 @@ const INTENT_TERMS: Readonly<Record<Exclude<ChatIntent, 'project_detail' | 'unkn
   contact: ['contact', 'email', 'reach daniel', 'יצירת קשר', 'אימייל', 'מייל'],
 }
 
+const SIMPLE_GREETINGS = new Set(INTENT_TERMS.greeting.map((term) => normalizeSimpleGreeting(term)))
+
+const PROJECT_FOLLOW_UPS = new Set([
+  'ספר לעומק',
+  'ספר עוד',
+  'אפשר עוד פרטים',
+  'tell me more',
+  'more details',
+].map((term) => normalize(term)))
+
+const AMBIGUOUS_FOLLOW_UPS = new Set([
+  'ספר לי',
+  'תספר לי',
+  'תמשיך',
+  'tell me',
+  'go on',
+  'continue',
+].map((term) => normalize(term)))
+
+const HEBREW_PROJECT_COPY: Readonly<Record<string, {
+  readonly title: string
+  readonly summary: string
+  readonly role: string
+  readonly outcome: string
+}>> = {
+  megureit: {
+    title: 'מערכת CRM משולבת לחברת נדל״ן',
+    summary: 'מערכת תפעולית משולבת לניהול מתעניינים בדירות, לקוחות, נכסים, חוזים ודוחות הנהלה.',
+    role: 'הובלת אפיון, תכנון והגדרת ה־CRM, הרשאות, מסכים, אינטגרציות, בדיקות, הדרכה, הטמעה ותמיכה.',
+    outcome: 'ריכוז מידע בין מערכות ומחלקות, צמצום הזנה כפולה ושגיאות ושיפור המעקב.',
+  },
+  'financial-document-automation': {
+    title: 'מערכת תפעול לחברת אנרגיה סולארית',
+    summary: 'מערכת monday.com חוצת מחלקות עם לוחות ואוטומציות מותאמים למכירות, תפעול וכספים.',
+    role: 'אחריות על ניתוח עסקי, תכנון הפתרון, פיתוח, בדיקות, מסירה והטמעה.',
+    outcome: 'יצירת תהליך תפעולי משותף והעברת עבודה פיננסית מארגון ידני לבדיקת רשומות מובנות.',
+  },
+  remindme: {
+    title: 'RemindMe — עוזר קניות מבוסס מיקום',
+    summary: 'עוזר קניות רב־לשוני שמזכיר רכישות שקל לשכוח בקרבת חנויות רלוונטיות.',
+    role: 'תכנון ופיתוח עצמאי בעזרת תהליך פיתוח משולב AI עם OpenAI Codex.',
+    outcome: 'המאגר תומך ברשימה, מפה, היסטוריה, פרופיל, RTL והזנת קול מרובת פריטים.',
+  },
+}
+
 const GAP_CATALOG: Readonly<Record<string, readonly string[]>> = {
   AWS: ['aws', 'amazon web services'],
   Azure: ['azure'],
@@ -51,6 +97,17 @@ function normalize(value: string): string {
   return value.normalize('NFKC').toLocaleLowerCase().replace(/[^\p{L}\p{N}#+.]+/gu, ' ').trim()
 }
 
+function normalizeSimpleGreeting(value: string): string {
+  return value.normalize('NFKC').toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+}
+
+export function isSimpleGreeting(message: string): boolean {
+  const normalized = normalizeSimpleGreeting(message)
+  return SIMPLE_GREETINGS.has(normalized) ||
+    /^(?:הי+|היוש+|שלום+)$/u.test(normalized) ||
+    /^(?:hi+|hey+|hello+)(?: there)?$/u.test(normalized)
+}
+
 function containsTerm(haystack: string, term: string): boolean {
   const normalizedTerm = normalize(term)
   return ` ${haystack} `.includes(` ${normalizedTerm} `)
@@ -60,18 +117,44 @@ function findProject(message: string) {
   const normalizedMessage = normalize(message)
   return projects.find((project) => {
     const identifiers = [project.slug, project.title, project.shortTitle]
-    if (project.slug === 'financial-document-automation') identifiers.push('solar', 'financial document')
+    if (project.slug === 'megureit') identifiers.push('מערכת crm', 'crm ecosystem')
+    if (project.slug === 'financial-document-automation') {
+      identifiers.push('solar', 'financial document', 'מערכת סולארית', 'אנרגיה סולארית')
+    }
     return identifiers.some((identifier) => normalizedMessage.includes(normalize(identifier)))
   })
 }
 
-function detectIntent(message: string): ChatIntent {
+export function detectIntent(message: string): ChatIntent {
   if (findProject(message)) return 'project_detail'
   const normalizedMessage = normalize(message)
+  if (isSimpleGreeting(message)) return 'greeting'
   for (const intent of ['contact', 'job_match', 'experience', 'skills', 'projects', 'identity'] as const) {
     if (INTENT_TERMS[intent].some((term) => normalizedMessage.includes(normalize(term)))) return intent
   }
   return 'unknown'
+}
+
+export function shouldClarifyTopic(request: ChatRequest): boolean {
+  return request.context?.previousIntent === 'greeting' &&
+    detectIntent(request.message) === 'unknown' &&
+    AMBIGUOUS_FOLLOW_UPS.has(normalize(request.message))
+}
+
+function projectCopy(project: (typeof projects)[number], language: ChatLanguage) {
+  if (language === 'he') return HEBREW_PROJECT_COPY[project.slug]
+  return {
+    title: project.title,
+    summary: project.summary,
+    role: project.role,
+    outcome: project.outcome,
+  }
+}
+
+function formatProjectDetail(project: (typeof projects)[number], language: ChatLanguage): string {
+  const copy = replyCopy[language]
+  const localized = projectCopy(project, language)
+  return `${localized.title}\n${localized.summary}\n${copy.projectRole}: ${localized.role}\n${copy.projectTechnologies}: ${project.technologies.join(', ')}\n${copy.projectOutcome}: ${localized.outcome}`
 }
 
 function formatList(items: readonly string[]): string {
@@ -143,11 +226,40 @@ export function answerStaticChat(request: ChatRequest): StaticChatAnswer {
     }
   }
 
-  const intent = requestType === 'job_match' ? 'job_match' : detectIntent(validation.value)
+  let intent = requestType === 'job_match' ? 'job_match' : detectIntent(validation.value)
   let answer: string
   let projectSlug: string | undefined
 
+  if (shouldClarifyTopic({ ...request, message: validation.value })) {
+    return {
+      answer: copy.clarifyTopic,
+      language,
+      intent: 'greeting',
+      suggestedQuestions: copy.suggestedQuestions,
+    }
+  }
+
+  if (intent === 'unknown' && PROJECT_FOLLOW_UPS.has(normalize(validation.value))) {
+    const previousProject = request.context?.previousProjectSlug
+      ? projects.find(({ slug }) => slug === request.context?.previousProjectSlug)
+      : undefined
+    if (previousProject && request.context?.previousIntent === 'project_detail') {
+      intent = 'project_detail'
+      projectSlug = previousProject.slug
+      answer = formatProjectDetail(previousProject, language)
+      return { answer, language, intent, suggestedQuestions: copy.suggestedQuestions, projectSlug }
+    }
+    if (request.context?.previousIntent === 'projects' || request.context?.previousIntent === 'project_detail') {
+      intent = 'projects'
+      answer = copy.chooseProject
+      return { answer, language, intent, suggestedQuestions: copy.suggestedQuestions }
+    }
+  }
+
   switch (intent) {
+    case 'greeting':
+      answer = copy.greeting
+      break
     case 'identity':
       answer = `${copy.identityPrefix} ${profile.title}. ${profile.valueProposition}`
       break
@@ -163,7 +275,10 @@ export function answerStaticChat(request: ChatRequest): StaticChatAnswer {
       break
     case 'projects':
       answer = `${copy.projectsIntro}\n${formatList(
-        projects.map((project) => `${project.title} — ${project.summary}`),
+        projects.map((project) => {
+          const localized = projectCopy(project, language)
+          return `${localized.title} — ${localized.summary}`
+        }),
       )}`
       break
     case 'project_detail': {
@@ -173,7 +288,7 @@ export function answerStaticChat(request: ChatRequest): StaticChatAnswer {
         break
       }
       projectSlug = project.slug
-      answer = `${project.title}\n${project.summary}\n${copy.projectRole}: ${project.role}\n${copy.projectTechnologies}: ${project.technologies.join(', ')}\n${copy.projectOutcome}: ${project.outcome}`
+      answer = formatProjectDetail(project, language)
       break
     }
     case 'job_match': {

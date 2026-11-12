@@ -109,11 +109,25 @@ test("keeps the public chat export inactive, local, and free of lead collection"
   assert.equal(chatTrigger.webhookId, "94c404d3-766e-4a0b-906c-517ad0b0815a");
   assert.deepEqual(model.parameters, {
     model: "qwen3:4b-instruct",
-    options: { think: false, temperature: 0.2, numCtx: 4096, numPredict: 256 },
+    options: {
+      think: false,
+      temperature: 0.2,
+      numCtx: 4096,
+      numPredict: 256,
+      keepAlive: "30m",
+    },
   });
   assert.equal(workflow.nodes.some((node) => node.name === "save_portfolio_lead"), false);
   assert.equal(Object.hasOwn(workflow.connections, "save_portfolio_lead"), false);
   assert.doesNotMatch(agent.parameters.options.systemMessage, /stored in Daniel's private Google Sheet|יישמרו בגיליון Google|save_portfolio_lead/iu);
   assert.match(agent.parameters.options.systemMessage, /danielbedrack@gmail\.com/iu);
   assert.match(agent.parameters.options.systemMessage, /do not (ask|request).*name.*email/isu);
+});
+
+test("configures the chat trigger to accept production webhook requests", async () => {
+  const workflow = JSON.parse(await readFile(new URL("workflows/portfolio-chat.json", root), "utf8"));
+  const chatTrigger = workflow.nodes.find((node) => node.name === "When chat message received");
+
+  assert.equal(chatTrigger.parameters.public, true);
+  assert.equal(chatTrigger.parameters.mode, "webhook");
 });

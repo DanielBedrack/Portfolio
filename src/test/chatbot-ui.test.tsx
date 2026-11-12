@@ -41,7 +41,7 @@ describe('PortfolioChat', () => {
     render(<PortfolioChat />)
     await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
 
-    await user.click(screen.getByRole('button', { name: "What is Daniel's professional experience?" }))
+    await user.click(screen.getByRole('button', { name: 'Professional experience' }))
 
     const transcript = screen.getByRole('log', { name: 'Chat messages' })
     expect(within(transcript).getByText("What is Daniel's professional experience?")).toBeInTheDocument()
@@ -60,6 +60,133 @@ describe('PortfolioChat', () => {
 
     expect(screen.getByText(/הכישורים והטכנולוגיות/)).toHaveAttribute('dir', 'rtl')
     expect(screen.getByText('מידע מהפורטפוליו')).toBeInTheDocument()
+  })
+
+  it('turns a Hebrew greeting into contextual quick-reply buttons', async () => {
+    const user = userEvent.setup()
+    render(<PortfolioChat />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+
+    await user.type(screen.getByLabelText('Ask about Daniel'), 'היי')
+    await user.keyboard('{Enter}')
+
+    expect(await screen.findByText('מה תרצה לדעת על דניאל?')).toHaveAttribute('dir', 'rtl')
+    expect(screen.getByRole('button', { name: 'ניסיון מקצועי' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'כישורים וטכנולוגיות' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'פרויקטים נבחרים' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'ניסיון מקצועי' }))
+
+    const transcript = screen.getByRole('log', { name: 'Chat messages' })
+    expect(within(transcript).getByText('מה הניסיון המקצועי של דניאל?')).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'התאמה למשרה' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'ניסיון מקצועי' })).not.toBeInTheDocument()
+  })
+
+  it('clarifies a vague Hebrew follow-up instead of claiming the information is missing', async () => {
+    const user = userEvent.setup()
+    render(<PortfolioChat />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    const input = screen.getByLabelText('Ask about Daniel')
+
+    await user.type(input, 'היי')
+    await user.keyboard('{Enter}')
+    await screen.findByText(/העוזר של תיק העבודות של דניאל/)
+    await user.type(input, 'ספר לי')
+    await user.keyboard('{Enter}')
+
+    expect(await screen.findByText('בשמחה — על מה תרצה שאספר: הניסיון, הכישורים או הפרויקטים?'))
+      .toBeInTheDocument()
+    expect(screen.queryByText(/המידע הזה אינו מופיע/)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'ניסיון מקצועי' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'פרויקטים נבחרים' })).toBeInTheDocument()
+  })
+
+  it('handles an expressive Hebrew greeting and offers project choices after a project list', async () => {
+    const user = userEvent.setup()
+    render(<PortfolioChat />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    const input = screen.getByLabelText('Ask about Daniel')
+
+    await user.type(input, 'הייי')
+    await user.keyboard('{Enter}')
+    expect(await screen.findByText(/העוזר של תיק העבודות של דניאל/)).toBeInTheDocument()
+
+    await user.type(input, 'ספר על פרויקטים')
+    await user.keyboard('{Enter}')
+    expect(await screen.findByRole('button', { name: 'מערכת CRM' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'מערכת סולארית' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'RemindMe' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'מערכת CRM' }))
+    expect(await screen.findByText(/הובלת אפיון, תכנון והגדרת ה־CRM/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Open project/ })).toHaveAttribute(
+      'href',
+      '/Portfolio/projects/megureit',
+    )
+  })
+
+  it('uses the prior static answer when the visitor asks for more detail', async () => {
+    const user = userEvent.setup()
+    render(<PortfolioChat />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    const input = screen.getByLabelText('Ask about Daniel')
+
+    await user.type(input, 'ספר על פרויקטים')
+    await user.keyboard('{Enter}')
+    await screen.findByText(/הפרויקטים המופיעים/)
+    await user.type(input, 'ספר לעומק')
+    await user.keyboard('{Enter}')
+
+    expect(await screen.findByText('על איזה פרויקט תרצה להעמיק?')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'RemindMe' })).toBeInTheDocument()
+  })
+
+  it('keeps project choices and context when an AI project answer is followed by static fallback', async () => {
+    const router: ChatRouter = {
+      answer: vi.fn()
+        .mockResolvedValueOnce({
+          answer: 'אלה הפרויקטים של דניאל.',
+          language: 'he',
+          intent: 'unknown',
+          suggestedQuestions: [],
+          source: 'ollama',
+        })
+        .mockRejectedValueOnce(new Error('offline')),
+      resetAvailability: vi.fn(),
+    }
+    const user = userEvent.setup()
+    render(<PortfolioChat router={router} />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+    const input = screen.getByLabelText('Ask about Daniel')
+
+    await user.type(input, 'ספר על פרויקטים')
+    await user.keyboard('{Enter}')
+    expect(await screen.findByText('אלה הפרויקטים של דניאל.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'מערכת CRM' })).toBeInTheDocument()
+
+    await user.type(input, 'ספר לעומק')
+    await user.keyboard('{Enter}')
+    expect(await screen.findByText('על איזה פרויקט תרצה להעמיק?')).toBeInTheDocument()
+  })
+
+  it('uses Enter to submit while preserving Shift+Enter as a newline', async () => {
+    const user = userEvent.setup()
+    render(<PortfolioChat />)
+    await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
+
+    const input = screen.getByLabelText('Ask about Daniel')
+    await user.type(input, 'Tell me about ')
+    await user.keyboard('{Shift>}{Enter}{/Shift}')
+    await user.type(input, 'Daniel')
+
+    expect(input).toHaveValue('Tell me about \nDaniel')
+    expect(screen.getByRole('log', { name: 'Chat messages' })).not.toHaveTextContent('Tell me about')
+
+    await user.keyboard('{Enter}')
+
+    expect(input).toHaveValue('')
+    expect(within(screen.getByRole('log', { name: 'Chat messages' })).getByText('Tell me about Daniel')).toBeInTheDocument()
   })
 
   it('keeps empty input disabled and rejects an oversized message locally', async () => {
@@ -170,19 +297,28 @@ describe('PortfolioChat', () => {
     const user = userEvent.setup()
     render(<PortfolioChat router={router} />)
     await user.click(screen.getByRole('button', { name: 'Open portfolio assistant' }))
-    await user.type(screen.getByLabelText('Ask about Daniel'), 'Who is Daniel?')
+    const transcript = screen.getByRole('log', { name: 'Chat messages' })
+    Object.defineProperty(transcript, 'scrollHeight', { configurable: true, value: 640 })
+    await user.type(screen.getByLabelText('Ask about Daniel'), 'מי זה דניאל?')
     await user.click(screen.getByRole('button', { name: 'Send message' }))
 
+    expect(screen.getByRole('status', { name: 'AI חושב' })).toBeInTheDocument()
+    expect(screen.queryByText('Preparing an answer…')).not.toBeInTheDocument()
+    expect(screen.getByText('מידע מהפורטפוליו')).toBeInTheDocument()
+    expect(screen.getByText('מה תרצה לדעת על דניאל?')).toHaveAttribute('dir', 'rtl')
+    expect(screen.getByRole('button', { name: 'ניסיון מקצועי' })).toBeDisabled()
+    await waitFor(() => expect(transcript.scrollTop).toBe(640))
     expect(screen.getByLabelText('Ask about Daniel')).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Send message' })).toBeDisabled()
     fireEvent.keyDown(screen.getByLabelText('Ask about Daniel'), { key: 'Enter' })
     expect(answer).toHaveBeenCalledTimes(1)
 
     await act(async () => resolveAnswer({
-      answer: 'Local AI answer', language: 'en', intent: 'unknown', suggestedQuestions: [], source: 'ollama',
+      answer: 'תשובת AI מקומי', language: 'he', intent: 'unknown', suggestedQuestions: [], source: 'ollama',
     }))
-    expect(await screen.findByText('Local AI answer')).toBeInTheDocument()
-    expect(screen.getByText('Local AI')).toBeInTheDocument()
+    expect(await screen.findByText('תשובת AI מקומי')).toBeInTheDocument()
+    expect(screen.queryByRole('status', { name: 'AI חושב' })).not.toBeInTheDocument()
+    expect(screen.getByText('AI מקומי')).toBeInTheDocument()
   })
 
   it('falls back visibly but without a technical error when an injected router rejects', async () => {
