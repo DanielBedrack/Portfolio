@@ -70,6 +70,15 @@ test('enables the hybrid assistant in the GitHub Pages production build', async 
   );
 });
 
+test('builds the assistant for CI browser tests without affecting unit tests', async () => {
+  const workflow = await readText('../.github/workflows/ci.yml');
+
+  assert.match(
+    workflow,
+    /- name: Run browser tests[\s\S]*?env:[\s\S]*?VITE_PORTFOLIO_CHAT_ENABLED:\s*["']?true["']?[\s\S]*?VITE_PORTFOLIO_CHAT_GATEWAY_URL:\s*https:\/\/gateway\.test\/[\s\S]*?run:\s*npm run test:e2e/,
+  );
+});
+
 test('isolates n8n and the gateway while exposing only the gateway through ngrok', async () => {
   const compose = await readText('compose.yaml');
   assert.match(compose, /127\.0\.0\.1:\$\{N8N_PORT:-5678\}:5678/);

@@ -30,4 +30,7 @@ jobs:
         run: npm run check
 
       - name: Run browser tests
+        env:
+          VITE_PORTFOLIO_CHAT_ENABLED: 'true'
+          VITE_PORTFOLIO_CHAT_GATEWAY_URL: https://gateway.test/
         run: npm run test:e2e
