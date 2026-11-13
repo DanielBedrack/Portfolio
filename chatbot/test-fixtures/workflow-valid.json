@@ -1,0 +1,46 @@
+{
+  "id": "portfolioValidatorFixture01",
+  "name": "Portfolio - validate three events",
+  "active": false,
+  "nodes": [
+    {
+      "id": "manual-1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {}
+    },
+    {
+      "id": "sample-1",
+      "name": "Sample Events",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [250, 0],
+      "parameters": {
+        "eventKey": "portfolio-fixture-events",
+        "jsCode": "return [{json:{eventId:'event-001',value:12}},{json:{eventId:'event-001',value:12}},{json:{value:'invalid'}}];"
+      }
+    },
+    {
+      "id": "validate-1",
+      "name": "Validate Events",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 0],
+      "parameters": {
+        "jsCode": "const seen = new Set(); return $input.all().map(({json}) => { if (typeof json.eventId !== 'string' || typeof json.value !== 'number') return {json:{status:'invalid'}}; if (seen.has(json.eventId)) return {json:{eventId:json.eventId,status:'duplicate'}}; seen.add(json.eventId); return {json:{eventId:json.eventId,status:'accepted'}}; });"
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [[{"node": "Sample Events", "type": "main", "index": 0}]]
+    },
+    "Sample Events": {
+      "main": [[{"node": "Validate Events", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "pinData": {}
+}

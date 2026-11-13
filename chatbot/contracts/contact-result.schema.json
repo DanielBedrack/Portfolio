@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://portfolio.local/contracts/contact-result.schema.json",
+  "title": "ContactResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["requestId", "status", "stored", "notificationAttempted", "safeMessage"],
+  "properties": {
+    "requestId": { "type": "string", "minLength": 8, "maxLength": 128, "pattern": "^[A-Za-z0-9._:-]+$" },
+    "status": {
+      "type": "string",
+      "enum": [
+        "stored_and_notified",
+        "stored_notification_failed",
+        "stored_notification_unknown",
+        "duplicate",
+        "invalid",
+        "storage_failed"
+      ]
+    },
+    "stored": { "type": "boolean" },
+    "notificationAttempted": { "type": "boolean" },
+    "safeMessage": { "type": "string", "minLength": 1, "maxLength": 500 }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "stored_and_notified",
+              "stored_notification_failed",
+              "stored_notification_unknown"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "stored": { "const": true },
+          "notificationAttempted": { "const": true }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "duplicate" } } },
+      "then": {
+        "properties": {
+          "stored": { "const": true },
+          "notificationAttempted": { "const": false }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "status": { "enum": ["invalid", "storage_failed"] } }
+      },
+      "then": {
+        "properties": {
+          "stored": { "const": false },
+          "notificationAttempted": { "const": false }
+        }
+      }
+    }
+  ]
+}

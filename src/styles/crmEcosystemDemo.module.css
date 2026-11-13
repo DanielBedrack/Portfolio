@@ -1,0 +1,472 @@
+.section {
+  padding-block: clamp(4.5rem, 9vw, 8rem);
+  color: #f8fbff;
+  background:
+    radial-gradient(circle at 82% 18%, rgb(69 123 255 / 18%), transparent 30rem),
+    #07101f;
+}
+
+.headingRow {
+  display: grid;
+  gap: var(--space-5);
+  margin-block-end: var(--space-6);
+}
+
+.eyebrow,
+.railLabel,
+.recordType {
+  color: #8da9ff;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.title {
+  max-width: 12ch;
+  margin-block-start: var(--space-2);
+  color: #f8fbff;
+  font-size: clamp(2.5rem, 6vw, 5.25rem);
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 46rem;
+  margin-block-start: var(--space-3);
+  color: rgb(238 244 255 / 72%);
+  font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+}
+
+.contextNote {
+  display: grid;
+  align-content: end;
+  gap: var(--space-2);
+  padding-block-start: var(--space-3);
+  color: rgb(238 244 255 / 62%);
+  border-block-start: 1px solid rgb(238 244 255 / 16%);
+  font-size: 0.86rem;
+}
+
+.contextNote a {
+  justify-self: start;
+  color: #a9bcff;
+  font-weight: 800;
+}
+
+.demo {
+  overflow: hidden;
+  color: #192235;
+  background: #f5f7fb;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2rem 6rem rgb(0 0 0 / 35%);
+}
+
+.appBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 4.6rem;
+  padding: 0.8rem clamp(1rem, 3vw, 1.6rem);
+  color: #f8fbff;
+  background: #101b30;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand > div {
+  display: grid;
+}
+
+.brand > div span {
+  color: rgb(238 244 255 / 58%);
+  font-size: 0.7rem;
+}
+
+.brandMark {
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  place-items: center;
+  background: #496df5;
+  border-radius: 0.65rem;
+  font-weight: 900;
+}
+
+.demoBadge {
+  padding: 0.35rem 0.5rem;
+  color: #a9bcff;
+  background: rgb(73 109 245 / 14%);
+  border: 1px solid rgb(141 169 255 / 25%);
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.integrationPath {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.6rem, 3vw, 1.6rem);
+  padding: 1rem;
+  background: #e9edf5;
+  border-block-end: 1px solid #d8deea;
+}
+
+.integrationPath div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+}
+
+.integrationPath div span {
+  display: grid;
+  width: 1.8rem;
+  height: 1.8rem;
+  place-items: center;
+  color: #fff;
+  background: #496df5;
+  border-radius: 0.45rem;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.integrationPath i {
+  color: #8791a4;
+  font-style: normal;
+}
+
+.workspace {
+  display: grid;
+}
+
+.roleRail,
+.syncPanel {
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  background: #edf1f7;
+}
+
+.roleTabs {
+  display: grid;
+  gap: 0.4rem;
+  margin-block-start: 0.8rem;
+}
+
+.roleTabs button {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.45rem 0.6rem;
+  color: #5c6679;
+  text-align: start;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.roleTabs button > span {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  color: #496df5;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.3rem 0.8rem rgb(25 34 53 / 8%);
+}
+
+.roleTabs button[aria-selected='true'] {
+  color: #17233a;
+  background: #fff;
+  border-color: #d8deea;
+  box-shadow: 0 0.55rem 1.2rem rgb(25 34 53 / 8%);
+}
+
+.roleTabs button[aria-selected='true'] > span {
+  color: #fff;
+  background: #496df5;
+}
+
+.permissionNote {
+  display: grid;
+  gap: 0.2rem;
+  padding-block-start: var(--space-4);
+  margin-block-start: var(--space-4);
+  color: #667084;
+  border-block-start: 1px solid #d8deea;
+  font-size: 0.72rem;
+}
+
+.permissionNote strong {
+  color: #263148;
+}
+
+.recordPanel {
+  min-width: 0;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: #fff;
+}
+
+.recordHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block-end: var(--space-4);
+  border-block-end: 1px solid #e2e6ed;
+}
+
+.recordHeader > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.recordHeader h3 {
+  color: #17233a;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  font-weight: 550;
+}
+
+.recordId {
+  color: #778196;
+  font-size: 0.74rem;
+}
+
+.roleBadge {
+  flex: 0 0 auto;
+  padding: 0.4rem 0.65rem;
+  color: #3155de;
+  background: #edf1ff;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+
+.roleDescription {
+  max-width: 40rem;
+  margin-block: var(--space-4);
+  color: #606a7e;
+}
+
+.fieldGrid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+  min-height: 6.2rem;
+  padding: 1rem;
+  background: #f7f8fb;
+  border: 1px solid #e2e6ed;
+  border-radius: 0.75rem;
+}
+
+.field > span {
+  color: #778196;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field > strong {
+  align-self: end;
+  color: #263148;
+  font-size: 0.88rem;
+}
+
+.field small {
+  color: #8a6b59;
+  font-size: 0.66rem;
+}
+
+.restricted {
+  background: repeating-linear-gradient(-45deg, #f7f5f2, #f7f5f2 8px, #f1eee9 8px, #f1eee9 16px);
+}
+
+.syncPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  border-block-start: 1px solid #d8deea;
+}
+
+.syncPanel h3 {
+  margin-block-start: 0.45rem;
+  color: #17233a;
+  font-size: 1.25rem;
+}
+
+.syncPanel p {
+  margin-block-start: 0.4rem;
+  color: #687286;
+  font-size: 0.78rem;
+}
+
+.syncSteps {
+  display: grid;
+  gap: 0.85rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.syncSteps li {
+  display: grid;
+  grid-template-columns: 1.8rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  color: #7c8699;
+}
+
+.syncSteps li > span {
+  display: grid;
+  width: 1.8rem;
+  height: 1.8rem;
+  place-items: center;
+  background: #dfe4ed;
+  border-radius: 50%;
+  font-size: 0.68rem;
+  font-weight: 850;
+}
+
+.syncSteps li > div {
+  display: grid;
+}
+
+.syncSteps strong {
+  font-size: 0.76rem;
+}
+
+.syncSteps small {
+  font-size: 0.65rem;
+}
+
+.syncSteps .complete {
+  color: #243966;
+}
+
+.syncSteps .complete > span {
+  color: #fff;
+  background: #496df5;
+}
+
+.syncStatus {
+  display: grid;
+  grid-template-columns: 1.8rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  color: #234d3b;
+  background: #e5f4ed;
+  border: 1px solid #c4e5d5;
+  border-radius: 0.65rem;
+}
+
+.syncStatus > span {
+  display: grid;
+  width: 1.8rem;
+  height: 1.8rem;
+  place-items: center;
+  color: #fff;
+  background: #2f8b64;
+  border-radius: 50%;
+  font-weight: 900;
+}
+
+.syncStatus p {
+  margin: 0;
+  color: inherit;
+  font-weight: 750;
+}
+
+.syncButton,
+.resetButton {
+  min-height: 2.85rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.syncButton {
+  margin-block-start: auto;
+  color: #fff;
+  background: #496df5;
+  border: 1px solid #496df5;
+}
+
+.resetButton {
+  color: #5f697c;
+  background: transparent;
+  border: 1px solid #cfd6e2;
+}
+
+@media (min-width: 62rem) {
+  .headingRow {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.45fr);
+    align-items: end;
+  }
+
+  .workspace {
+    grid-template-columns: minmax(12rem, 0.58fr) minmax(25rem, 1.45fr) minmax(16rem, 0.75fr);
+  }
+
+  .syncPanel {
+    border-block-start: 0;
+    border-inline-start: 1px solid #d8deea;
+  }
+
+  .fieldGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 40rem) {
+  .appBar,
+  .recordHeader {
+    align-items: flex-start;
+  }
+
+  .integrationPath {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .integrationPath div {
+    flex: 0 0 auto;
+  }
+
+  .roleBadge {
+    max-width: 8rem;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roleTabs button,
+  .syncButton,
+  .resetButton {
+    scroll-behavior: auto;
+  }
+}

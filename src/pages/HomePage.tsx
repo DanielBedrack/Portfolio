@@ -1,11 +1,14 @@
 import { Footer } from '../components/layout/Footer'
 import { Navigation } from '../components/layout/Navigation'
 import { ContactSection } from '../components/sections/ContactSection'
+import { CrmEcosystemDemo } from '../components/sections/CrmEcosystemDemo'
 import { EducationSection } from '../components/sections/EducationSection'
 import { ExperienceSection } from '../components/sections/ExperienceSection'
 import { FeaturedWork } from '../components/sections/FeaturedWork'
 import { Hero } from '../components/sections/Hero'
 import { ProcessSection } from '../components/sections/ProcessSection'
+import { RemindMeDemo } from '../components/sections/RemindMeDemo'
+import { SolarOperationsDemo } from '../components/sections/SolarOperationsDemo'
 import { SkillsSection } from '../components/sections/SkillsSection'
 import { getRouteMeta } from '../app/routeMeta'
 import { Seo } from '../seo/Seo'
@@ -18,6 +21,9 @@ export function HomePage() {
       <main>
         <Hero />
         <FeaturedWork />
+        <CrmEcosystemDemo />
+        <RemindMeDemo />
+        <SolarOperationsDemo />
         <ProcessSection />
         <ExperienceSection />
         <SkillsSection />

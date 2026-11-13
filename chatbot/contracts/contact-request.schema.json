@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://portfolio.local/contracts/contact-request.schema.json",
+  "title": "ContactRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["consent", "name", "email", "message", "language", "sessionId"],
+  "properties": {
+    "consent": { "const": true },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "email": { "type": "string", "format": "email", "maxLength": 254 },
+    "message": { "type": "string", "minLength": 1, "maxLength": 4000 },
+    "language": { "type": "string", "enum": ["he", "en"] },
+    "sessionId": { "type": "string", "minLength": 1, "maxLength": 256 }
+  }
+}

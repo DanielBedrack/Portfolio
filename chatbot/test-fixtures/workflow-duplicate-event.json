@@ -1,0 +1,25 @@
+{
+  "name": "Duplicate trigger fixture",
+  "active": false,
+  "nodes": [
+    {
+      "id": "duplicate-id",
+      "name": "Webhook One",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "parameters": { "path": "portfolio-contact", "eventKey": "contact-event" }
+    },
+    {
+      "id": "duplicate-id",
+      "name": "Webhook Two",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 0],
+      "parameters": { "path": "portfolio-contact", "eventKey": "contact-event" }
+    }
+  ],
+  "connections": {},
+  "settings": {},
+  "pinData": {}
+}

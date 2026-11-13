@@ -1,0 +1,5 @@
+{
+  "name": "Invalid workflow fixture",
+  "active": false,
+  "connections": "missing-node-map"
+}

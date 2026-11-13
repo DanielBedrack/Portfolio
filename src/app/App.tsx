@@ -2,6 +2,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { HomePage } from '../pages/HomePage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { ProjectPage } from '../pages/ProjectPage'
+import { isPortfolioChatEnabled } from '../chatbot/config'
+import { PortfolioChat } from '../components/chat/PortfolioChat'
 
 export function PortfolioRoutes() {
   return (
@@ -18,9 +20,12 @@ export function PortfolioRoutes() {
 }
 
 export function App() {
+  const chatEnabled = isPortfolioChatEnabled(import.meta.env.VITE_PORTFOLIO_CHAT_ENABLED)
+
   return (
     <BrowserRouter basename="/Portfolio">
       <PortfolioRoutes />
+      {chatEnabled ? <PortfolioChat /> : null}
     </BrowserRouter>
   )
 }
